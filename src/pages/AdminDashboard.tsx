@@ -36,9 +36,11 @@ const AdminDashboard: React.FC = () => {
   const fetchMeals = async () => {
     try {
       const data = await mealsAPI.getAll();
-      setMeals(data.meals);
+      setMeals(data.meals || []);
     } catch (error) {
       console.error('Error fetching meals:', error);
+      setMeals([]);
+      alert('Backend serverga ulanib bo\'lmadi. Iltimos, backend ishlab turganini tekshiring.');
     } finally {
       setLoading(false);
     }
@@ -166,63 +168,81 @@ const AdminDashboard: React.FC = () => {
         </div>
 
         {/* Meals Table */}
-        <div className="bg-white rounded-lg shadow-md overflow-hidden">
-          <table className="w-full">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Rasm
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Nom
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Kategoriya
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Narx
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Amallar
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {meals.map((meal) => (
-                <tr key={meal.id}>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <img src={meal.image} alt={meal.name} className="w-16 h-16 object-cover rounded" />
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="text-sm font-medium text-gray-900">{meal.name}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-orange-100 text-orange-800">
-                      {meal.category}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{meal.price.toLocaleString()} so'm</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <button
-                      onClick={() => openModal(meal)}
-                      className="text-blue-600 hover:text-blue-900 mr-4"
-                    >
-                      Tahrirlash
-                    </button>
-                    <button
-                      onClick={() => handleDelete(meal.id)}
-                      className="text-red-600 hover:text-red-900"
-                    >
-                      O'chirish
-                    </button>
-                  </td>
+        {meals && meals.length > 0 ? (
+          <div className="bg-white rounded-lg shadow-md overflow-hidden">
+            <table className="w-full">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Rasm
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Nom
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Kategoriya
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Narx
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Amallar
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {meals.map((meal) => (
+                  <tr key={meal.id}>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <img src={meal.image} alt={meal.name} className="w-16 h-16 object-cover rounded" />
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="text-sm font-medium text-gray-900">{meal.name}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-orange-100 text-orange-800">
+                        {meal.category}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">{meal.price.toLocaleString()} so'm</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <button
+                        onClick={() => openModal(meal)}
+                        className="text-blue-600 hover:text-blue-900 mr-4"
+                      >
+                        Tahrirlash
+                      </button>
+                      <button
+                        onClick={() => handleDelete(meal.id)}
+                        className="text-red-600 hover:text-red-900"
+                      >
+                        O'chirish
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="bg-white rounded-lg shadow-md p-12 text-center">
+            <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+            </svg>
+            <h3 className="mt-2 text-sm font-medium text-gray-900">Taomlar yo'q</h3>
+            <p className="mt-1 text-sm text-gray-500">Yangi taom qo'shish uchun yuqoridagi tugmani bosing.</p>
+            <div className="mt-6">
+              <button
+                onClick={() => openModal()}
+                className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700"
+              >
+                + Birinchi taomni qo'shish
+              </button>
+            </div>
+          </div>
+        )}
       </main>
 
       {/* Modal */}
