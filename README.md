@@ -4,6 +4,8 @@ O'zbek milliy taomlarini taqdim etuvchi zamonaviy, to'liq moslashuvchan restoran
 
 ## 🚀 Tez Boshlash
 
+### Local Development:
+
 **Batafsil o'rnatish qo'llanmasi uchun [SETUP.md](./SETUP.md) faylini ko'ring.**
 
 ```bash
@@ -27,6 +29,16 @@ npm run dev
 **Admin Panel**: http://localhost:5173/admin
 - Username: `admin`
 - Password: `admin123`
+
+---
+
+### Production URLs:
+
+- 🌐 **Website**: https://beyoglu-karshi.com
+- 🔧 **Backend API**: https://admin.beyoglu-karshi.com/api
+- 🔐 **Admin Panel**: https://beyoglu-karshi.com/admin
+
+**Deployment qo'llanmasi**: [VERCEL_SETUP.md](./VERCEL_SETUP.md) | [BACKEND_DEPLOYMENT.md](./BACKEND_DEPLOYMENT.md)
 
 ## ✨ Xususiyatlar
 
@@ -178,8 +190,9 @@ Body: {
 ## Manzil
 
 **Beyougli Karshi**
-- Manzil: Qarshi shahri, Nasaf ko'chasi, 123-uy
-- Telefon: +998 99 123-45-67
+- Manzil: Qarshi shahar, Amir Temur ko'chasi 7/9 uy
+- Mo'ljal: Qarshi davlat universiteti
+- Telefon: +998 20 005-10-11 / +998 20 005-50-11
 - Email: info@beyouglikarshi.uz
 
 ## Litsenziya
