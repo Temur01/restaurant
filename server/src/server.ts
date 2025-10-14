@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import authRoutes from './routes/authRoutes';
 import mealsRoutes from './routes/mealsRoutes';
+import { specs, swaggerUi } from './config/swagger';
 
 dotenv.config();
 
@@ -14,6 +15,7 @@ const PORT = process.env.PORT || 5000;
 const corsOptions = {
   origin: [
     'http://localhost:5173',
+    'http://localhost:3000',
     'https://beyoglu-karshi.com',
     'https://www.beyoglu-karshi.com'
   ],
@@ -29,6 +31,12 @@ app.use(express.urlencoded({ extended: true }));
 
 // Serve static files (uploads)
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
+// Swagger Documentation
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, {
+  customCss: '.swagger-ui .topbar { display: none }',
+  customSiteTitle: 'Beyougli Karshi API Documentation'
+}));
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -53,6 +61,7 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
 app.listen(PORT, () => {
   console.log(`🚀 Server ${PORT}-portda ishga tushdi`);
   console.log(`📍 API: http://localhost:${PORT}/api`);
+  console.log(`📚 Swagger UI: http://localhost:${PORT}/api-docs`);
 });
 
 export default app;

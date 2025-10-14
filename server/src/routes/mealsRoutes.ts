@@ -8,15 +8,165 @@ import {
 } from '../controllers/mealsController';
 import { authMiddleware } from '../middleware/auth';
 
+/**
+ * @swagger
+ * tags:
+ *   name: Meals
+ *   description: Meal management endpoints
+ */
+
 const router = express.Router();
 
-// Public route
+/**
+ * @swagger
+ * /meals:
+ *   get:
+ *     summary: Get all meals
+ *     tags: [Meals]
+ *     responses:
+ *       200:
+ *         description: List of all meals
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 meals:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Meal'
+ */
 router.get('/', getAllMeals);
+
+/**
+ * @swagger
+ * /meals/{id}:
+ *   get:
+ *     summary: Get meal by ID
+ *     tags: [Meals]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Meal details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Meal'
+ *       404:
+ *         description: Meal not found
+ */
 router.get('/:id', getMealById);
 
-// Protected routes (require authentication)
+/**
+ * @swagger
+ * /meals:
+ *   post:
+ *     summary: Create a new meal (Admin only)
+ *     tags: [Meals]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [name, image, description, price, category, ingredients]
+ *             properties:
+ *               name:
+ *                 type: string
+ *               image:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               price:
+ *                 type: integer
+ *               category:
+ *                 type: string
+ *               ingredients:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *     responses:
+ *       201:
+ *         description: Meal created successfully
+ *       401:
+ *         description: Unauthorized
+ */
 router.post('/', authMiddleware, createMeal);
+
+/**
+ * @swagger
+ * /meals/{id}:
+ *   put:
+ *     summary: Update a meal (Admin only)
+ *     tags: [Meals]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               image:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               price:
+ *                 type: integer
+ *               category:
+ *                 type: string
+ *               ingredients:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *     responses:
+ *       200:
+ *         description: Meal updated successfully
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Meal not found
+ */
 router.put('/:id', authMiddleware, updateMeal);
+
+/**
+ * @swagger
+ * /meals/{id}:
+ *   delete:
+ *     summary: Delete a meal (Admin only)
+ *     tags: [Meals]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Meal deleted successfully
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Meal not found
+ */
 router.delete('/:id', authMiddleware, deleteMeal);
 
 export default router;
