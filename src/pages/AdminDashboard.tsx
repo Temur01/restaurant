@@ -12,7 +12,7 @@ const AdminDashboard: React.FC = () => {
     name: '',
     image: '',
     description: '',
-    price: 0,
+    price: "" as string | number,
     category: '',
     ingredients: [] as string[],
   });
@@ -38,7 +38,6 @@ const AdminDashboard: React.FC = () => {
       const data = await mealsAPI.getAll();
       setMeals(data.meals || []);
     } catch (error) {
-      console.error('Error fetching meals:', error);
       setMeals([]);
       alert('Backend serverga ulanib bo\'lmadi. Iltimos, backend ishlab turganini tekshiring.');
     } finally {
@@ -58,7 +57,7 @@ const AdminDashboard: React.FC = () => {
         name: meal.name,
         image: meal.image,
         description: meal.description,
-        price: meal.price,
+        price: meal.price.toString(), // Convert number to string for form
         category: meal.category,
         ingredients: meal.ingredients,
       });
@@ -68,7 +67,7 @@ const AdminDashboard: React.FC = () => {
         name: '',
         image: '',
         description: '',
-        price: 0,
+        price: '',
         category: '',
         ingredients: [],
       });
@@ -85,10 +84,16 @@ const AdminDashboard: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      // Convert price string to number before sending to backend
+      const dataToSend = {
+        ...formData,
+        price: Number(formData.price) || 0
+      };
+      
       if (editingMeal) {
-        await mealsAPI.update(editingMeal.id, formData);
+        await mealsAPI.update(editingMeal.id, dataToSend);
       } else {
-        await mealsAPI.create(formData);
+        await mealsAPI.create(dataToSend);
       }
       fetchMeals();
       closeModal();
@@ -205,7 +210,9 @@ const AdminDashboard: React.FC = () => {
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">{meal.price.toLocaleString()} so'm</div>
+                      <div className="text-sm text-gray-900">
+                        {meal.price === 0 ? 'Bepul' : `${meal.price.toLocaleString()} so'm`}
+                      </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <button
@@ -289,13 +296,16 @@ const AdminDashboard: React.FC = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Narx (so'm)</label>
-                  <input
-                    type="number"
-                    value={formData.price}
-                    onChange={(e) => setFormData({ ...formData, price: Number(e.target.value) })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                    required
-                  />
+                  <div className="relative">
+                    <input
+                      type="number"
+                      value={formData.price}
+                      onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                      className="w-full px-3 py-2 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                      placeholder="0"
+                    />
+                    <span className="absolute right-3 top-2 text-gray-500 text-sm">so'm</span>
+                  </div>
                 </div>
 
                 <div>

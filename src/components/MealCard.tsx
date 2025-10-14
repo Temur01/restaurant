@@ -16,7 +16,7 @@ const MealCard: React.FC<MealCardProps> = ({ meal }) => {
           className="w-full h-full object-cover"
         />
         <div className="absolute top-3 right-3 bg-orange-500 text-white px-3 py-1 rounded-full font-bold shadow-lg">
-          ${meal.price.toFixed(2)}
+          {meal.price === 0 ? 'Bepul' : `${meal.price.toLocaleString()} so'm`}
         </div>
       </div>
 
