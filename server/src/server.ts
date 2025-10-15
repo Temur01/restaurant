@@ -17,7 +17,8 @@ const corsOptions = {
     'http://localhost:5173',
     'http://localhost:3000',
     'https://beyoglu-karshi.com',
-    'https://www.beyoglu-karshi.com'
+    'https://www.beyoglu-karshi.com',
+    'https://admin.beyoglu-karshi.com'
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
