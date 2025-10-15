@@ -6,6 +6,7 @@ dotenv.config();
 
 async function migrate() {
   try {
+    console.log('🚀 Starting database migration for Neon...');
 
     // Create admins table
     await pool.query(`
@@ -16,6 +17,7 @@ async function migrate() {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
+    console.log('✅ Admins table created/verified');
 
     // Create meals table
     await pool.query(`
@@ -31,11 +33,13 @@ async function migrate() {
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
+    console.log('✅ Meals table created/verified');
 
     // Create index
     await pool.query(`
       CREATE INDEX IF NOT EXISTS idx_meals_category ON meals(category)
     `);
+    console.log('✅ Index created/verified');
 
     // Insert default admin
     const adminUsername = process.env.ADMIN_USERNAME || 'alibek';
@@ -48,6 +52,7 @@ async function migrate() {
        ON CONFLICT (username) DO NOTHING`,
       [adminUsername, hashedPassword]
     );
+    console.log('✅ Default admin user created/verified');
 
     // Insert sample meals
     const sampleMeals = [
@@ -85,9 +90,12 @@ async function migrate() {
         [meal.name, meal.image, meal.description, meal.price, meal.category, meal.ingredients]
       );
     }
+    console.log('✅ Sample meals inserted/verified');
 
+    console.log('🎉 Database migration completed successfully!');
     process.exit(0);
   } catch (error) {
+    console.error('❌ Migration failed:', error);
     process.exit(1);
   }
 }

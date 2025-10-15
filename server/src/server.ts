@@ -9,7 +9,7 @@ import { specs, swaggerUi } from './config/swagger';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3001;
 
 // CORS configuration for production
 const allowedOrigins = [
@@ -24,19 +24,28 @@ const allowedOrigins = [
 
 const corsOptions = {
   origin: function (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) {
+    console.log('CORS request from origin:', origin);
+    console.log('Allowed origins:', allowedOrigins);
+    
     // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
+    if (!origin) {
+      console.log('No origin provided, allowing request');
+      return callback(null, true);
+    }
     
     // Allow all origins in development
     if (process.env.NODE_ENV !== 'production') {
+      console.log('Development mode, allowing all origins');
       return callback(null, true);
     }
     
     // In production, check against allowed origins
     if (allowedOrigins.indexOf(origin) !== -1) {
+      console.log('Origin allowed:', origin);
       callback(null, true);
     } else {
       console.log('CORS blocked origin:', origin);
+      console.log('Available allowed origins:', allowedOrigins);
       callback(new Error('Not allowed by CORS'), false);
     }
   },
@@ -58,12 +67,17 @@ app.options('*', cors(corsOptions));
 // Additional CORS headers for all responses
 app.use((req, res, next) => {
   const origin = req.headers.origin;
+  console.log('Additional CORS middleware - Origin:', origin);
   
   if (process.env.NODE_ENV === 'production') {
     if (allowedOrigins.includes(origin as string)) {
+      console.log('Setting CORS origin to:', origin);
       res.header('Access-Control-Allow-Origin', origin);
+    } else {
+      console.log('Origin not in allowed list, not setting CORS origin');
     }
   } else {
+    console.log('Development mode, setting CORS origin to:', origin || '*');
     res.header('Access-Control-Allow-Origin', origin || '*');
   }
   
