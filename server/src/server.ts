@@ -15,6 +15,7 @@ const PORT = process.env.PORT || 5000;
 const allowedOrigins = [
   'https://beyoglu-karshi.com',
   'https://www.beyoglu-karshi.com',
+  'https://admin.beyoglu-karshi.com',
   'http://localhost:3000',
   'http://localhost:5173',
   'http://127.0.0.1:3000',
