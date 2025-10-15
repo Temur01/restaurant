@@ -6,7 +6,7 @@ dotenv.config();
 
 async function migrate() {
   try {
-    console.log('🚀 Starting database migration for Neon...');
+    console.log('🚀 Starting database migration...');
 
     // Create admins table
     await pool.query(`
@@ -17,7 +17,6 @@ async function migrate() {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
-    console.log('✅ Admins table created/verified');
 
     // Create meals table
     await pool.query(`
@@ -33,13 +32,11 @@ async function migrate() {
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
-    console.log('✅ Meals table created/verified');
 
     // Create index
     await pool.query(`
       CREATE INDEX IF NOT EXISTS idx_meals_category ON meals(category)
     `);
-    console.log('✅ Index created/verified');
 
     // Insert default admin
     const adminUsername = process.env.ADMIN_USERNAME || 'alibek';
@@ -52,46 +49,6 @@ async function migrate() {
        ON CONFLICT (username) DO NOTHING`,
       [adminUsername, hashedPassword]
     );
-    console.log('✅ Default admin user created/verified');
-
-    // Insert sample meals
-    const sampleMeals = [
-      {
-        name: "O'sh (Palov)",
-        image: 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=800&q=80',
-        description: 'Milliy taomimiz, to\'ylar va bayramlarda tayyorlanadigan, guruch, go\'sht va sabzi asosida pishiriladigan mazali palov.',
-        price: 25000,
-        category: 'Milliy taomlar',
-        ingredients: ['Guruch', "Qo'y go'shti", 'Sabzi', 'Piyoz', 'Noxat', 'Zira', "Yog'"]
-      },
-      {
-        name: 'Shashlik',
-        image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&q=80',
-        description: 'Cho\'g\' ustida pishirilgan, nozik va yumshoq qo\'y go\'shti shashlik. Piyoz va non bilan xizmat qilinadi.',
-        price: 30000,
-        category: "Go'sht taomlar",
-        ingredients: ["Qo'y go'shti", 'Piyoz', 'Ziravorlar', 'Sirka', 'Tuz']
-      },
-      {
-        name: "Lag'mon",
-        image: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=800&q=80',
-        description: 'Qo\'lda cho\'zilgan maxsus lag\'mon, go\'sht va xilma-xil sabzavotlar bilan pishirilgan sho\'rva.',
-        price: 22000,
-        category: "Sho'rvalar",
-        ingredients: ["Qo'l lag'mon", "Go'sht", 'Sabzavotlar', 'Kartoshka', "Bulg'or qalampiri", 'Sarimsoq']
-      }
-    ];
-
-    for (const meal of sampleMeals) {
-      await pool.query(
-        `INSERT INTO meals (name, image, description, price, category, ingredients)
-         VALUES ($1, $2, $3, $4, $5, $6)
-         ON CONFLICT DO NOTHING`,
-        [meal.name, meal.image, meal.description, meal.price, meal.category, meal.ingredients]
-      );
-    }
-    console.log('✅ Sample meals inserted/verified');
-
     console.log('🎉 Database migration completed successfully!');
     process.exit(0);
   } catch (error) {

@@ -5,17 +5,25 @@ import pool from '../config/database';
 
 export const login = async (req: Request, res: Response) => {
   try {
+    
     const { username, password } = req.body;
 
     if (!username || !password) {
       return res.status(400).json({ message: 'Username va parol talab qilinadi' });
     }
 
+    // Check if JWT_SECRET is set
+    if (!process.env.JWT_SECRET) {
+      return res.status(500).json({ message: 'Server konfiguratsiyasi xatosi' });
+    }
+
+    
     // Find admin by username
     const result = await pool.query(
       'SELECT * FROM admins WHERE username = $1',
       [username]
     );
+    
 
     if (result.rows.length === 0) {
       return res.status(401).json({ message: 'Noto\'g\'ri username yoki parol' });
@@ -46,8 +54,10 @@ export const login = async (req: Request, res: Response) => {
       }
     });
   } catch (error) {
-    console.error('Login error:', error);
-    res.status(500).json({ message: 'Server xatosi' });
+    res.status(500).json({ 
+      message: 'Server xatosi',
+      error: process.env.NODE_ENV === 'development' ? error instanceof Error ? error.message : 'Unknown error' : undefined
+    });
   }
 };
 
