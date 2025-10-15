@@ -12,15 +12,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // CORS configuration for production
-const allowedOrigins = [
-  'http://localhost:5173',
-  'http://localhost:3000',
-  'https://beyoglu-karshi.com',
-  'https://www.beyoglu-karshi.com',
-  'https://admin.beyoglu-karshi.com',
-  'https://api.beyoglu-karshi.com',
-  'https://api.beyoglu-karshi.com/*',
-];
+const allowedOrigins = ['*'];  // Allow all origins
 
 const corsOptions = {
   origin: function (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) {
