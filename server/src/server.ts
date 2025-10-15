@@ -18,7 +18,8 @@ const allowedOrigins = [
   'https://beyoglu-karshi.com',
   'https://www.beyoglu-karshi.com',
   'https://admin.beyoglu-karshi.com',
-  'https://api.beyoglu-karshi.com'
+  'https://api.beyoglu-karshi.com',
+  'https://api.beyoglu-karshi.com/api',
 ];
 
 const corsOptions = {
