@@ -1,14 +1,20 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 
 const App: React.FC = () => {
+  // Check if the current hostname is the admin subdomain
+  const isAdminSubdomain = window.location.hostname === 'admin.beyoglu-karshi.com';
+
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route 
+          path="/" 
+          element={isAdminSubdomain ? <Navigate to="/admin" replace /> : <HomePage />} 
+        />
         <Route path="/admin" element={<AdminLogin />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
       </Routes>
