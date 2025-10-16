@@ -13,99 +13,118 @@ const MealCard: React.FC<MealCardProps> = ({ meal }) => {
 
   return (
     <>
-      {/* Compact Card View */}
+      {/* Simplified Card View */}
       <div 
-        className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer"
+        className="group bg-white rounded-3xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1 hover:scale-105"
         onClick={openModal}
       >
         {/* Image Section */}
-        <div className="relative h-32 sm:h-40 lg:h-48 overflow-hidden">
+        <div className="relative h-40 sm:h-48 lg:h-56 overflow-hidden">
           <img
             src={meal.image}
             alt={meal.name}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
           />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
+          
         </div>
 
-        {/* Content Section - Name and Price */}
-        <div className="p-4">
-          <h3 className="text-lg font-bold text-center text-gray-800 md:mb-2 mb-0">{meal.name}</h3>
-          <div className='text-center'>
-            <span className="  text-orange-500 px-4 py-2 rounded-full font-bold text-sm">
-              {meal.price === 0 ? 'Bepul' : `${meal.price.toLocaleString()} so'm`}
-            </span>
-          </div>
+        {/* Name Section */}
+        <div className="p-3 sm:p-6 text-center">
+          <h3 className="text-base sm:text-xl font-bold text-gray-800 group-hover:text-orange-600 transition-colors leading-tight">
+            {meal.name}
+          </h3>
+          <div className="text-orange-500 font-bold text-sm sm:text-base mt-1">{meal.price.toLocaleString()} so'm</div>
         </div>
       </div>
 
-      {/* Modal for Full Details */}
+      {/* Enhanced Modal for Full Details */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in">
+          <div className="bg-white rounded-2xl max-w-3xl w-full max-h-[95vh] overflow-y-auto shadow-2xl animate-scale-in">
             {/* Modal Header */}
-            <div className="flex justify-between items-center p-6 border-b">
-              <h2 className="text-2xl font-bold text-gray-800">{meal.name}</h2>
-              <button
-                onClick={closeModal}
-                className="text-gray-500 hover:text-gray-700 text-2xl font-bold"
-              >
-                ×
-              </button>
+            <div className="relative bg-gradient-to-r from-orange-500 to-red-500 p-6 text-white">
+              <div className="absolute inset-0 bg-black/10 rounded-t-2xl"></div>
+              <div className="relative flex justify-between items-center">
+                <div>
+                  <h2 className="text-2xl sm:text-3xl font-bold mb-1">{meal.name}</h2>
+                  <p className="text-orange-100">{meal.category}</p>
+                </div>
+                <button
+                  onClick={closeModal}
+                  className="bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full p-2 transition-colors"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
             </div>
 
             {/* Modal Content */}
             <div className="p-6">
               {/* Image */}
-              <div className="relative mb-6">
+              <div className="relative mb-6 rounded-xl overflow-hidden">
                 <img
                   src={meal.image}
                   alt={meal.name}
-                  className="w-full h-64 object-cover rounded-lg"
+                  className="w-full h-72 object-cover"
                 />
-                <div className="absolute top-4 right-4 bg-orange-500 text-white px-4 py-2 rounded-full font-bold shadow-lg">
-                  {meal.price === 0 ? 'Bepul' : `${meal.price.toLocaleString()} so'm`}
+                <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg">
+                  <span className="text-orange-600 font-bold text-lg">
+                    {meal.price === 0 ? 'Bepul' : `${meal.price.toLocaleString()} so'm`}
+                  </span>
                 </div>
-              </div>
-
-              {/* Category */}
-              <div className="mb-4">
-                <span className="inline-block bg-orange-100 text-orange-600 text-sm px-4 py-2 rounded-full font-semibold">
-                  {meal.category}
-                </span>
               </div>
 
               {/* Description */}
               <div className="mb-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">Tavsif:</h3>
-                <p className="text-gray-600 leading-relaxed">
+                <h3 className="text-xl font-bold text-gray-800 mb-3 flex items-center gap-2">
+                  <svg className="w-5 h-5 text-orange-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                  </svg>
+                  Tavsif
+                </h3>
+                <p className="text-gray-600 leading-relaxed text-lg">
                   {meal.description}
                 </p>
               </div>
 
               {/* Ingredients */}
               <div>
-                <h3 className="text-lg font-semibold text-gray-800 mb-3">Tarkibi:</h3>
-                <div className="flex flex-wrap gap-2">
+                <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                  <svg className="w-5 h-5 text-orange-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm0 4a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1V8zm8 0a1 1 0 011-1h4a1 1 0 011 1v2a1 1 0 01-1 1h-4a1 1 0 01-1-1V8zm0 4a1 1 0 011-1h4a1 1 0 011 1v2a1 1 0 01-1 1h-4a1 1 0 01-1-1v-2z" clipRule="evenodd" />
+                  </svg>
+                  Tarkibi
+                </h3>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                   {meal.ingredients.map((ingredient, index) => (
-                    <span
+                    <div
                       key={index}
-                      className="bg-gray-100 text-gray-700 text-sm px-3 py-2 rounded-md"
+                      className="bg-gradient-to-r from-orange-50 to-red-50 border border-orange-200 text-orange-800 px-4 py-3 rounded-lg text-sm font-medium flex items-center gap-2"
                     >
+                      <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
                       {ingredient}
-                    </span>
+                    </div>
                   ))}
                 </div>
               </div>
             </div>
 
             {/* Modal Footer */}
-            <div className="p-6 border-t bg-gray-50 rounded-b-xl">
-              <button
-                onClick={closeModal}
-                className="w-full bg-orange-500 text-white py-3 rounded-lg font-semibold hover:bg-orange-600 transition-colors"
-              >
-                Yopish
-              </button>
+            <div className="p-6 border-t bg-gray-50 rounded-b-2xl">
+              <div className="flex gap-3">
+                <button
+                  onClick={closeModal}
+                  className="flex-1 bg-gray-200 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-300 transition-colors"
+                >
+                  Yopish
+                </button>
+                <button className="flex-1 bg-gradient-to-r from-orange-500 to-red-500 text-white py-3 rounded-xl font-semibold hover:from-orange-600 hover:to-red-600 transition-all shadow-lg hover:shadow-xl">
+                  Buyurtma berish
+                </button>
+              </div>
             </div>
           </div>
         </div>

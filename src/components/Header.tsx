@@ -30,29 +30,16 @@ const Header: React.FC = () => {
 
       {/* Main Header */}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-        <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4">
-          {/* Logo & Title */}
-          <div className="flex items-center justify-center lg:justify-start gap-3">
-            <div className="bg-white p-2 sm:p-3 rounded-full shadow-lg">
-              <svg className="w-6 h-6 sm:w-8 sm:h-8 text-orange-500" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M6 3a1 1 0 011-1h6a1 1 0 011 1v1h3a1 1 0 110 2h-.5l-.77 8.47a2 2 0 01-1.99 1.86H7.26a2 2 0 01-1.99-1.86L4.5 6H4a1 1 0 010-2h3V3zm2 0h4v1H8V3z"/>
-              </svg>
-            </div>
-            <div>
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">Beyougli Karshi</h1>
-              <p className="text-orange-100 text-xs sm:text-sm mt-0.5">Turkiya taomlari | Fast Food | Nonushta</p>
-            </div>
+        <div className="flex items-center justify-center gap-3">
+          <div className="bg-white p-2 sm:p-3 rounded-full shadow-lg">
+            <svg className="w-6 h-6 sm:w-8 sm:h-8 text-orange-500" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M6 3a1 1 0 011-1h6a1 1 0 011 1v1h3a1 1 0 110 2h-.5l-.77 8.47a2 2 0 01-1.99 1.86H7.26a2 2 0 01-1.99-1.86L4.5 6H4a1 1 0 010-2h3V3zm2 0h4v1H8V3z"/>
+            </svg>
           </div>
-
-          {/* Navigation */}
-          <nav className="flex flex-wrap justify-center lg:justify-end gap-2 sm:gap-4">
-            <button className="px-4 sm:px-6 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg transition-all duration-300 text-sm sm:text-base font-medium backdrop-blur-sm">
-              Menyu
-            </button>
-            <button className="px-4 sm:px-6 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg transition-all duration-300 text-sm sm:text-base font-medium backdrop-blur-sm">
-              Aloqa
-            </button>
-          </nav>
+          <div>
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">Beyougli Karshi</h1>
+            <p className="text-orange-100 text-xs sm:text-sm mt-0.5">Turkiya taomlari | Fast Food | Nonushta</p>
+          </div>
         </div>
       </div>
 
