@@ -5,16 +5,58 @@ import { AuthRequest } from '../middleware/auth';
 // Get all categories
 export const getAllCategories = async (req: AuthRequest, res: Response) => {
   try {
+    console.log('Getting all categories...');
+    
+    // First check if categories table exists
+    const tableCheck = await pool.query(`
+      SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_schema = 'public' 
+        AND table_name = 'categories'
+      );
+    `);
+    
+    console.log('Categories table exists:', tableCheck.rows[0].exists);
+    
+    if (!tableCheck.rows[0].exists) {
+      console.log('Categories table does not exist, creating it...');
+      
+      // Create categories table
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS categories (
+          id SERIAL PRIMARY KEY,
+          name VARCHAR(100) UNIQUE NOT NULL,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+      `);
+      
+      // Insert default categories
+      await pool.query(`
+        INSERT INTO categories (name) VALUES
+        ('Milliy taomlar'),
+        ('Go''sht taomlar'),
+        ('Sho''rvalar'),
+        ('Non mahsulotlari'),
+        ('Salatlar'),
+        ('Ichimliklar')
+        ON CONFLICT (name) DO NOTHING
+      `);
+    }
+    
     const result = await pool.query(
       'SELECT * FROM categories ORDER BY name ASC'
     );
 
+    console.log('Categories found:', result.rows.length);
+    
     res.json({
       success: true,
       categories: result.rows
     });
-  } catch (error) {
-    res.status(500).json({ message: 'Server xatosi' });
+  } catch (error: any) {
+    console.error('Categories error:', error);
+    res.status(500).json({ message: 'Server xatosi', error: error.message });
   }
 };
 
