@@ -7,6 +7,7 @@ import {
   deleteMeal
 } from '../controllers/mealsController';
 import { authMiddleware } from '../middleware/auth';
+import upload from '../middleware/upload';
 
 /**
  * @swagger
@@ -99,7 +100,7 @@ router.get('/:id', getMealById);
  *       401:
  *         description: Unauthorized
  */
-router.post('/', authMiddleware, createMeal);
+router.post('/', authMiddleware, upload.single('image'), createMeal);
 
 /**
  * @swagger
@@ -145,7 +146,7 @@ router.post('/', authMiddleware, createMeal);
  *       404:
  *         description: Meal not found
  */
-router.put('/:id', authMiddleware, updateMeal);
+router.put('/:id', authMiddleware, upload.single('image'), updateMeal);
 
 /**
  * @swagger

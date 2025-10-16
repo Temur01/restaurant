@@ -84,6 +84,7 @@ const AdminDashboard: React.FC = () => {
         category_id: meal.category_id || '',
         ingredients: meal.ingredients,
       });
+      setImagePreview(meal.image);
     } else {
       setEditingMeal(null);
       setFormData({
@@ -94,7 +95,9 @@ const AdminDashboard: React.FC = () => {
         category_id: '',
         ingredients: [],
       });
+      setImagePreview('');
     }
+    setSelectedFile(null);
     setShowModal(true);
   };
 
@@ -102,16 +105,45 @@ const AdminDashboard: React.FC = () => {
     setShowModal(false);
     setEditingMeal(null);
     setIngredientInput('');
+    setSelectedFile(null);
+    setImagePreview('');
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setImagePreview(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // Convert price string to number before sending to backend
-      const dataToSend = {
-        ...formData,
-        price: Number(formData.price) || 0
-      };
+      let dataToSend;
+      
+      if (selectedFile) {
+        // If file is selected, create FormData for file upload
+        const formDataToSend = new FormData();
+        formDataToSend.append('name', formData.name);
+        formDataToSend.append('description', formData.description);
+        formDataToSend.append('price', (Number(formData.price) || 0).toString());
+        formDataToSend.append('category_id', formData.category_id.toString());
+        formDataToSend.append('ingredients', JSON.stringify(formData.ingredients));
+        formDataToSend.append('image', selectedFile);
+        
+        dataToSend = formDataToSend;
+      } else {
+        // If no file, send regular JSON data
+        dataToSend = {
+          ...formData,
+          price: Number(formData.price) || 0
+        };
+      }
       
       if (editingMeal) {
         await mealsAPI.update(editingMeal.id, dataToSend);
@@ -455,14 +487,47 @@ const AdminDashboard: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Rasm URL</label>
-                  <input
-                    type="text"
-                    value={formData.image}
-                    onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                    required
-                  />
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Rasm</label>
+                  <div className="space-y-3">
+                    {/* File Upload */}
+                    <div>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleFileChange}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                      />
+                      <p className="text-xs text-gray-500 mt-1">Yoki URL kiritish uchun quyidagi maydonni to'ldiring</p>
+                    </div>
+                    
+                    {/* URL Input */}
+                    <div>
+                      <input
+                        type="text"
+                        value={formData.image}
+                        onChange={(e) => {
+                          setFormData({ ...formData, image: e.target.value });
+                          if (e.target.value) {
+                            setImagePreview(e.target.value);
+                            setSelectedFile(null);
+                          }
+                        }}
+                        placeholder="Rasm URL manzili"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                      />
+                    </div>
+                    
+                    {/* Image Preview */}
+                    {imagePreview && (
+                      <div className="mt-3">
+                        <img
+                          src={imagePreview}
+                          alt="Preview"
+                          className="w-32 h-32 object-cover rounded-lg border border-gray-300"
+                        />
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 <div>

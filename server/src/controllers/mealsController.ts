@@ -88,10 +88,28 @@ export const getMealById = async (req: AuthRequest, res: Response) => {
 // Create new meal
 export const createMeal = async (req: AuthRequest, res: Response) => {
   try {
-    const { name, image, description, price, category_id, ingredients } = req.body;
+    const { name, description, price, category_id, ingredients } = req.body;
+    
+    // Handle file upload or URL
+    let imageUrl = req.body.image; // For URL input
+    if (req.file) {
+      // If file is uploaded, use the full URL
+      const baseUrl = `${req.protocol}://${req.get('host')}`;
+      imageUrl = `${baseUrl}/uploads/${req.file.filename}`;
+    }
 
-    if (!name || !image || !description || !price || !category_id || !ingredients) {
+    if (!name || !imageUrl || !description || !price || !category_id || !ingredients) {
       return res.status(400).json({ message: 'Barcha maydonlar to\'ldirilishi kerak' });
+    }
+
+    // Parse ingredients if it's a string
+    let parsedIngredients = ingredients;
+    if (typeof ingredients === 'string') {
+      try {
+        parsedIngredients = JSON.parse(ingredients);
+      } catch (e) {
+        return res.status(400).json({ message: 'Tarkib noto\'g\'ri formatda' });
+      }
     }
 
     // Verify category exists
@@ -108,7 +126,7 @@ export const createMeal = async (req: AuthRequest, res: Response) => {
       `INSERT INTO meals (name, image, description, price, category_id, ingredients, updated_at)
        VALUES ($1, $2, $3, $4, $5, $6, CURRENT_TIMESTAMP)
        RETURNING *`,
-      [name, image, description, price, category_id, ingredients]
+      [name, imageUrl, description, price, category_id, parsedIngredients]
     );
 
     res.status(201).json({
@@ -126,10 +144,28 @@ export const createMeal = async (req: AuthRequest, res: Response) => {
 export const updateMeal = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
-    const { name, image, description, price, category_id, ingredients } = req.body;
+    const { name, description, price, category_id, ingredients } = req.body;
+    
+    // Handle file upload or URL
+    let imageUrl = req.body.image; // For URL input
+    if (req.file) {
+      // If file is uploaded, use the full URL
+      const baseUrl = `${req.protocol}://${req.get('host')}`;
+      imageUrl = `${baseUrl}/uploads/${req.file.filename}`;
+    }
 
-    if (!name || !image || !description || !price || !category_id || !ingredients) {
+    if (!name || !imageUrl || !description || !price || !category_id || !ingredients) {
       return res.status(400).json({ message: 'Barcha maydonlar to\'ldirilishi kerak' });
+    }
+
+    // Parse ingredients if it's a string
+    let parsedIngredients = ingredients;
+    if (typeof ingredients === 'string') {
+      try {
+        parsedIngredients = JSON.parse(ingredients);
+      } catch (e) {
+        return res.status(400).json({ message: 'Tarkib noto\'g\'ri formatda' });
+      }
     }
 
     // Verify category exists
@@ -148,7 +184,7 @@ export const updateMeal = async (req: AuthRequest, res: Response) => {
            category_id = $5, ingredients = $6, updated_at = CURRENT_TIMESTAMP
        WHERE id = $7
        RETURNING *`,
-      [name, image, description, price, category_id, ingredients, id]
+      [name, imageUrl, description, price, category_id, parsedIngredients, id]
     );
 
     if (result.rows.length === 0) {

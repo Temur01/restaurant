@@ -47,11 +47,17 @@ export const mealsAPI = {
     return response.data;
   },
   create: async (meal: any) => {
-    const response = await api.post('/meals', meal);
+    const config = meal instanceof FormData 
+      ? { headers: { 'Content-Type': 'multipart/form-data' } }
+      : {};
+    const response = await api.post('/meals', meal, config);
     return response.data;
   },
   update: async (id: number, meal: any) => {
-    const response = await api.put(`/meals/${id}`, meal);
+    const config = meal instanceof FormData 
+      ? { headers: { 'Content-Type': 'multipart/form-data' } }
+      : {};
+    const response = await api.put(`/meals/${id}`, meal, config);
     return response.data;
   },
   delete: async (id: number) => {
