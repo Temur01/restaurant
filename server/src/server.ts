@@ -97,6 +97,7 @@ app.use((req, res, next) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/meals', mealsRoutes);
 app.use('/api/categories', categoriesRoutes);
+app.use('/api/cats', categoriesRoutes); // Test with different path
 
 // Test endpoint to verify routing
 app.get('/api/test-categories', (req, res) => {
