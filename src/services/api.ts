@@ -1,11 +1,11 @@
 import axios from 'axios';
 
 // Use environment variable for API URL
-// Production: https://api.beyoglu-karshi.com/api
+// Production: https://beyoglu-karshi.com/api
 // Development: http://localhost:3001/api
 const API_URL = (import.meta as any).env?.VITE_API_URL || 
   ((import.meta as any).env?.MODE === 'production' 
-    ? 'https://api.beyoglu-karshi.com/api'
+    ? 'https://beyoglu-karshi.com/api'
     : 'http://localhost:3001/api');
 
 const api = axios.create({
