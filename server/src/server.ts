@@ -109,6 +109,21 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', message: 'Server ishlayapti' });
 });
 
+// Version check
+app.get('/api/version', (req, res) => {
+  res.json({ 
+    version: '1.0.7',
+    timestamp: new Date().toISOString(),
+    message: 'Latest deployment - categories route fixed',
+    routes: {
+      auth: '/api/auth',
+      meals: '/api/meals',
+      categories: '/api/categories',
+      cats: '/api/cats'
+    }
+  });
+});
+
 // 404 handler
 app.use((req, res) => {
   res.status(404).json({ message: 'Yo\'nalish topilmadi' });
