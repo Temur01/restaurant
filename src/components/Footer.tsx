@@ -9,11 +9,7 @@ const Footer: React.FC = () => {
           {/* About Section */}
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <div className="bg-gradient-to-r from-orange-500 to-red-500 p-2 rounded-full">
-                <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M6 3a1 1 0 011-1h6a1 1 0 011 1v1h3a1 1 0 110 2h-.5l-.77 8.47a2 2 0 01-1.99 1.86H7.26a2 2 0 01-1.99-1.86L4.5 6H4a1 1 0 010-2h3V3zm2 0h4v1H8V3z"/>
-                </svg>
-              </div>
+             
               <h3 className="text-xl font-bold text-white">Beyougli Karshi</h3>
             </div>
             <p className="text-sm leading-relaxed mb-4">
