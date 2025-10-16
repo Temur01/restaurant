@@ -24,6 +24,8 @@ const AdminDashboard: React.FC = () => {
     name: '',
   });
   const [ingredientInput, setIngredientInput] = useState('');
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>('');
   const navigate = useNavigate();
 
   useEffect(() => {

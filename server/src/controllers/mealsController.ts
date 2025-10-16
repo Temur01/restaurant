@@ -6,7 +6,7 @@ import { AuthRequest } from '../middleware/auth';
 export const getAllMeals = async (req: AuthRequest, res: Response) => {
   try {
     const result = await pool.query(
-      `SELECT m.*, c.name as category_name, c.description as category_description
+      `SELECT m.*, c.name as category_name
        FROM meals m
        LEFT JOIN categories c ON m.category_id = c.id
        ORDER BY m.created_at DESC`
@@ -23,8 +23,7 @@ export const getAllMeals = async (req: AuthRequest, res: Response) => {
       category_id: row.category_id,
       category_info: {
         id: row.category_id,
-        name: row.category_name,
-        description: row.category_description
+        name: row.category_name
       },
       ingredients: row.ingredients,
       created_at: row.created_at,
@@ -47,7 +46,7 @@ export const getMealById = async (req: AuthRequest, res: Response) => {
     const { id } = req.params;
 
     const result = await pool.query(
-      `SELECT m.*, c.name as category_name, c.description as category_description
+      `SELECT m.*, c.name as category_name
        FROM meals m
        LEFT JOIN categories c ON m.category_id = c.id
        WHERE m.id = $1`,
@@ -69,8 +68,7 @@ export const getMealById = async (req: AuthRequest, res: Response) => {
       category_id: row.category_id,
       category_info: {
         id: row.category_id,
-        name: row.category_name,
-        description: row.category_description
+        name: row.category_name
       },
       ingredients: row.ingredients,
       created_at: row.created_at,
