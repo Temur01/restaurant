@@ -34,7 +34,8 @@ const MealCard: React.FC<MealCardProps> = ({ meal }) => {
           <h3 className="text-base sm:text-xl font-bold text-gray-800 group-hover:text-orange-600 transition-colors leading-tight">
             {meal.name}
           </h3>
-          <div className="text-orange-500 font-bold text-sm sm:text-base mt-1">{meal.price.toLocaleString()} so'm</div>
+          <div className="text-gray-500 text-xs sm:text-sm mt-1 mb-2">{meal.category}</div>
+          <div className="text-orange-500 font-bold text-sm sm:text-base">{meal.price.toLocaleString()} so'm</div>
         </div>
       </div>
 
