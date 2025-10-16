@@ -112,9 +112,9 @@ app.get('/api/health', (req, res) => {
 // Version check
 app.get('/api/version', (req, res) => {
   res.json({ 
-    version: '1.0.7',
+    version: '1.0.8',
     timestamp: new Date().toISOString(),
-    message: 'Latest deployment - categories route fixed',
+    message: 'Latest deployment - meals route fixed for production (removed file upload)',
     routes: {
       auth: '/api/auth',
       meals: '/api/meals',

@@ -9,6 +9,16 @@ import {
 import { authMiddleware } from '../middleware/auth';
 import upload from '../middleware/upload';
 
+// Conditional upload middleware - only use file upload in development
+const conditionalUpload = (req: any, res: any, next: any) => {
+  // In production, skip file upload (use URLs instead)
+  if (process.env.NODE_ENV === 'production' || process.env.VERCEL === '1') {
+    return next();
+  }
+  // In development, allow file uploads
+  return upload.single('image')(req, res, next);
+};
+
 /**
  * @swagger
  * tags:
@@ -100,7 +110,7 @@ router.get('/:id', getMealById);
  *       401:
  *         description: Unauthorized
  */
-router.post('/', authMiddleware, upload.single('image'), createMeal);
+router.post('/', authMiddleware, conditionalUpload, createMeal);
 
 /**
  * @swagger
@@ -146,7 +156,7 @@ router.post('/', authMiddleware, upload.single('image'), createMeal);
  *       404:
  *         description: Meal not found
  */
-router.put('/:id', authMiddleware, upload.single('image'), updateMeal);
+router.put('/:id', authMiddleware, conditionalUpload, updateMeal);
 
 /**
  * @swagger
