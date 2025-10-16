@@ -38,6 +38,11 @@ const router = express.Router();
  *                   items:
  *                     $ref: '#/components/schemas/Category'
  */
+// Test endpoint first
+router.get('/test', (req, res) => {
+  res.json({ message: 'Categories route test works!', timestamp: new Date().toISOString() });
+});
+
 router.get('/', getAllCategories);
 
 /**
