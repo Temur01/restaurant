@@ -1,5 +1,6 @@
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
+import path from 'path';
 
 const options = {
   definition: {
@@ -17,7 +18,7 @@ const options = {
     servers: [
       {
         url: process.env.NODE_ENV === 'production' 
-          ? 'https://admin.beyoglu-karshi.com/api'
+          ? 'https://api.beyoglu-karshi.com/api'
           : 'http://localhost:3001/api',
         description: process.env.NODE_ENV === 'production' ? 'Production server' : 'Development server'
       }
@@ -122,8 +123,14 @@ const options = {
     ]
   },
   apis: [
-    './src/routes/*.ts',
-    './src/controllers/*.ts'
+    // In production, use compiled JS files from dist
+    // In development, use TypeScript source files
+    process.env.NODE_ENV === 'production' 
+      ? path.join(__dirname, '../routes/*.js')
+      : path.join(__dirname, '../routes/*.ts'),
+    process.env.NODE_ENV === 'production'
+      ? path.join(__dirname, '../controllers/*.js')
+      : path.join(__dirname, '../controllers/*.ts')
   ]
 };
 

@@ -81,10 +81,21 @@ app.use(express.urlencoded({ extended: true }));
 // Serve static files (uploads)
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
-// Swagger Documentation
+// Swagger Documentation - Serve raw JSON spec
+app.get('/api-docs.json', (req, res) => {
+  console.log('📄 Swagger JSON requested');
+  const specsAny = specs as any;
+  console.log('Specs paths:', specsAny.paths ? Object.keys(specsAny.paths).length : 0, 'endpoints');
+  res.json(specs);
+});
+
+// Swagger UI
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, {
   customCss: '.swagger-ui .topbar { display: none }',
-  customSiteTitle: 'Beyougli Karshi API Documentation'
+  customSiteTitle: 'Beyougli Karshi API Documentation',
+  swaggerOptions: {
+    url: '/api-docs.json'
+  }
 }));
 
 // Debug: Log all requests
