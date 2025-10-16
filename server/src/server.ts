@@ -135,8 +135,9 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
   res.status(500).json({ message: 'Server xatosi', error: err.message });
 });
 
-// Only start server if not in Vercel serverless environment
-if (process.env.VERCEL !== '1') {
+// Only start server if this file is run directly (not imported as a module)
+// This prevents the server from starting when imported by Vercel serverless functions
+if (require.main === module) {
   app.listen(PORT, () => {
     console.log(`🚀 Server ${PORT}-portda ishga tushdi`);
     console.log(`📍 API: http://localhost:${PORT}/api`);
