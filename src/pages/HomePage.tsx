@@ -19,8 +19,6 @@ const HomePage: React.FC = () => {
       const data = await mealsAPI.getAll();
       setMeals(data?.meals || []);
     } catch (err) {
-      console.error('Error fetching meals:', err);
-      // Fallback to sample data if API is not available
       setError('Backend serverga ulanib bo\'lmadi. Namuna ma\'lumotlar ko\'rsatilmoqda.');
       setMeals(getSampleMeals());
     } finally {
@@ -129,7 +127,7 @@ const HomePage: React.FC = () => {
 
         {/* Responsive Grid Layout */}
         {meals && meals.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
             {meals.map((meal) => (
               <MealCard key={meal.id} meal={meal} />
             ))}
