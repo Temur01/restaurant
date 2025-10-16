@@ -87,10 +87,21 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, {
   customSiteTitle: 'Beyougli Karshi API Documentation'
 }));
 
+// Debug: Log all requests
+app.use((req, res, next) => {
+  console.log(`📝 ${req.method} ${req.path} ${req.url}`);
+  next();
+});
+
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/meals', mealsRoutes);
 app.use('/api/categories', categoriesRoutes);
+
+// Test endpoint to verify routing
+app.get('/api/test-categories', (req, res) => {
+  res.json({ message: 'Test categories endpoint works!' });
+});
 
 // Health check
 app.get('/api/health', (req, res) => {
