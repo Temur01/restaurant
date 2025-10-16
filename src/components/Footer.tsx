@@ -10,7 +10,7 @@ const Footer: React.FC = () => {
           <div>
             <div className="flex items-center gap-2 mb-4">
              
-              <h3 className="text-xl font-bold text-white">Beyougli Karshi</h3>
+              <h3 className="text-xl font-bold text-white">Beyoglu Karshi</h3>
             </div>
             <p className="text-sm leading-relaxed mb-4">
               Turkiya taomlari, fast food va nonushta taomlarini taqdim etamiz. 

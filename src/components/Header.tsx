@@ -37,7 +37,7 @@ const Header: React.FC = () => {
             className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover shadow-lg mb-3"
           /> */}
           <div className='text-center'>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">Beyougli Karshi</h1>
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">Beyoglu Karshi</h1>
             <p className="text-orange-100 text-xs sm:text-sm mt-0.5">Turkiya taomlari | Fast Food | Nonushta</p>
           </div>
         </div>
