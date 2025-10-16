@@ -6,12 +6,34 @@ import { AuthRequest } from '../middleware/auth';
 export const getAllMeals = async (req: AuthRequest, res: Response) => {
   try {
     const result = await pool.query(
-      'SELECT * FROM meals ORDER BY created_at DESC'
+      `SELECT m.*, c.name as category_name, c.description as category_description
+       FROM meals m
+       LEFT JOIN categories c ON m.category_id = c.id
+       ORDER BY m.created_at DESC`
     );
+
+    // Transform the result to include category as an object
+    const meals = result.rows.map(row => ({
+      id: row.id,
+      name: row.name,
+      image: row.image,
+      description: row.description,
+      price: row.price,
+      category: row.category_name, // Keep for backward compatibility
+      category_id: row.category_id,
+      category_info: {
+        id: row.category_id,
+        name: row.category_name,
+        description: row.category_description
+      },
+      ingredients: row.ingredients,
+      created_at: row.created_at,
+      updated_at: row.updated_at
+    }));
 
     res.json({
       success: true,
-      meals: result.rows
+      meals: meals
     });
   } catch (error) {
     console.error('Get meals error:', error);
@@ -25,7 +47,10 @@ export const getMealById = async (req: AuthRequest, res: Response) => {
     const { id } = req.params;
 
     const result = await pool.query(
-      'SELECT * FROM meals WHERE id = $1',
+      `SELECT m.*, c.name as category_name, c.description as category_description
+       FROM meals m
+       LEFT JOIN categories c ON m.category_id = c.id
+       WHERE m.id = $1`,
       [id]
     );
 
@@ -33,9 +58,28 @@ export const getMealById = async (req: AuthRequest, res: Response) => {
       return res.status(404).json({ message: 'Taom topilmadi' });
     }
 
+    const row = result.rows[0];
+    const meal = {
+      id: row.id,
+      name: row.name,
+      image: row.image,
+      description: row.description,
+      price: row.price,
+      category: row.category_name, // Keep for backward compatibility
+      category_id: row.category_id,
+      category_info: {
+        id: row.category_id,
+        name: row.category_name,
+        description: row.category_description
+      },
+      ingredients: row.ingredients,
+      created_at: row.created_at,
+      updated_at: row.updated_at
+    };
+
     res.json({
       success: true,
-      meal: result.rows[0]
+      meal: meal
     });
   } catch (error) {
     console.error('Get meal error:', error);
@@ -46,17 +90,27 @@ export const getMealById = async (req: AuthRequest, res: Response) => {
 // Create new meal
 export const createMeal = async (req: AuthRequest, res: Response) => {
   try {
-    const { name, image, description, price, category, ingredients } = req.body;
+    const { name, image, description, price, category_id, ingredients } = req.body;
 
-    if (!name || !image || !description || !price || !category || !ingredients) {
+    if (!name || !image || !description || !price || !category_id || !ingredients) {
       return res.status(400).json({ message: 'Barcha maydonlar to\'ldirilishi kerak' });
     }
 
+    // Verify category exists
+    const categoryCheck = await pool.query(
+      'SELECT id FROM categories WHERE id = $1',
+      [category_id]
+    );
+
+    if (categoryCheck.rows.length === 0) {
+      return res.status(400).json({ message: 'Kategoriya topilmadi' });
+    }
+
     const result = await pool.query(
-      `INSERT INTO meals (name, image, description, price, category, ingredients, updated_at)
+      `INSERT INTO meals (name, image, description, price, category_id, ingredients, updated_at)
        VALUES ($1, $2, $3, $4, $5, $6, CURRENT_TIMESTAMP)
        RETURNING *`,
-      [name, image, description, price, category, ingredients]
+      [name, image, description, price, category_id, ingredients]
     );
 
     res.status(201).json({
@@ -74,19 +128,29 @@ export const createMeal = async (req: AuthRequest, res: Response) => {
 export const updateMeal = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
-    const { name, image, description, price, category, ingredients } = req.body;
+    const { name, image, description, price, category_id, ingredients } = req.body;
 
-    if (!name || !image || !description || !price || !category || !ingredients) {
+    if (!name || !image || !description || !price || !category_id || !ingredients) {
       return res.status(400).json({ message: 'Barcha maydonlar to\'ldirilishi kerak' });
+    }
+
+    // Verify category exists
+    const categoryCheck = await pool.query(
+      'SELECT id FROM categories WHERE id = $1',
+      [category_id]
+    );
+
+    if (categoryCheck.rows.length === 0) {
+      return res.status(400).json({ message: 'Kategoriya topilmadi' });
     }
 
     const result = await pool.query(
       `UPDATE meals 
        SET name = $1, image = $2, description = $3, price = $4, 
-           category = $5, ingredients = $6, updated_at = CURRENT_TIMESTAMP
+           category_id = $5, ingredients = $6, updated_at = CURRENT_TIMESTAMP
        WHERE id = $7
        RETURNING *`,
-      [name, image, description, price, category, ingredients, id]
+      [name, image, description, price, category_id, ingredients, id]
     );
 
     if (result.rows.length === 0) {

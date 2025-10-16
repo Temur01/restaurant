@@ -2,17 +2,23 @@ import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import MealCard from '../components/MealCard';
-import { Meal } from '../types';
-import { mealsAPI } from '../services/api';
+import { Meal, Category } from '../types';
+import { mealsAPI, categoriesAPI } from '../services/api';
 
 const HomePage: React.FC = () => {
   const [meals, setMeals] = useState<Meal[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('Barchasi');
 
   useEffect(() => {
-    fetchMeals();
+    fetchData();
   }, []);
+
+  const fetchData = async () => {
+    await Promise.all([fetchMeals(), fetchCategories()]);
+  };
 
   const fetchMeals = async () => {
     try {
@@ -21,6 +27,17 @@ const HomePage: React.FC = () => {
     } catch (err) {
       setError('Backend serverga ulanib bo\'lmadi. Namuna ma\'lumotlar ko\'rsatilmoqda.');
       setMeals(getSampleMeals());
+    }
+  };
+
+  const fetchCategories = async () => {
+    try {
+      const data = await categoriesAPI.getAll();
+      setCategories(data?.categories || []);
+    } catch (err) {
+      console.error('Categories fetch error:', err);
+      // Use sample categories if API fails
+      setCategories(getSampleCategories());
     } finally {
       setLoading(false);
     }
@@ -85,6 +102,35 @@ const HomePage: React.FC = () => {
     ];
   };
 
+  const getSampleCategories = (): Category[] => {
+    return [
+      { id: 1, name: 'Milliy taomlar' },
+      { id: 2, name: 'Go\'sht taomlar' },
+      { id: 3, name: 'Sho\'rvalar' },
+      { id: 4, name: 'Non mahsulotlari' },
+      { id: 5, name: 'Salatlar' },
+      { id: 6, name: 'Ichimliklar' }
+    ];
+  };
+
+  // Get categories for filter
+  const getCategoriesForFilter = (): string[] => {
+    if (categories.length > 0) {
+      return ['Barchasi', ...categories.map(cat => cat.name)];
+    }
+    // Fallback to meal categories if API categories not available
+    const mealCategories = meals.map(meal => meal.category);
+    return ['Barchasi', ...Array.from(new Set(mealCategories))];
+  };
+
+  // Filter meals by selected category
+  const getFilteredMeals = (): Meal[] => {
+    if (selectedCategory === 'Barchasi') {
+      return meals;
+    }
+    return meals.filter(meal => meal.category === selectedCategory);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -125,10 +171,32 @@ const HomePage: React.FC = () => {
           </p>
         </div>
 
+        {/* Categories Filter */}
+        {meals && meals.length > 0 && (
+          <div className="mb-8">
+            <h3 className="text-xl font-semibold text-gray-800 mb-4">Kategoriyalar:</h3>
+            <div className="flex flex-wrap gap-2 sm:gap-3">
+              {getCategoriesForFilter().map((category) => (
+                <button
+                  key={category}
+                  onClick={() => setSelectedCategory(category)}
+                  className={`px-4 py-2 rounded-full font-medium text-sm transition-colors ${
+                    selectedCategory === category
+                      ? 'bg-orange-500 text-white shadow-md'
+                      : 'bg-white text-gray-700 border border-gray-300 hover:bg-orange-50 hover:border-orange-300'
+                  }`}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Responsive Grid Layout */}
         {meals && meals.length > 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
-            {meals.map((meal) => (
+            {getFilteredMeals().map((meal) => (
               <MealCard key={meal.id} meal={meal} />
             ))}
           </div>

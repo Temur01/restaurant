@@ -1,28 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { mealsAPI, authAPI } from '../services/api';
-import { Meal } from '../types';
+import { mealsAPI, authAPI, categoriesAPI } from '../services/api';
+import { Meal, Category } from '../types';
 
 const AdminDashboard: React.FC = () => {
   const [meals, setMeals] = useState<Meal[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [editingMeal, setEditingMeal] = useState<Meal | null>(null);
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+  const [activeTab, setActiveTab] = useState<'meals' | 'categories'>('meals');
   const [formData, setFormData] = useState({
     name: '',
     image: '',
     description: '',
     price: "" as string | number,
-    category: '',
+    category_id: '' as string | number,
     ingredients: [] as string[],
+  });
+  const [categoryFormData, setCategoryFormData] = useState({
+    name: '',
   });
   const [ingredientInput, setIngredientInput] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
     checkAuth();
-    fetchMeals();
+    fetchData();
   }, []);
+
+  const fetchData = async () => {
+    await Promise.all([fetchMeals(), fetchCategories()]);
+  };
 
   const checkAuth = async () => {
     try {
@@ -40,6 +51,16 @@ const AdminDashboard: React.FC = () => {
     } catch (error) {
       setMeals([]);
       alert('Backend serverga ulanib bo\'lmadi. Iltimos, backend ishlab turganini tekshiring.');
+    }
+  };
+
+  const fetchCategories = async () => {
+    try {
+      const data = await categoriesAPI.getAll();
+      setCategories(data.categories || []);
+    } catch (error) {
+      setCategories([]);
+      console.error('Categories fetch error:', error);
     } finally {
       setLoading(false);
     }
@@ -58,7 +79,7 @@ const AdminDashboard: React.FC = () => {
         image: meal.image,
         description: meal.description,
         price: meal.price.toString(), // Convert number to string for form
-        category: meal.category,
+        category_id: meal.category_id || '',
         ingredients: meal.ingredients,
       });
     } else {
@@ -68,7 +89,7 @@ const AdminDashboard: React.FC = () => {
         image: '',
         description: '',
         price: '',
-        category: '',
+        category_id: '',
         ingredients: [],
       });
     }
@@ -130,6 +151,53 @@ const AdminDashboard: React.FC = () => {
     });
   };
 
+  // Category management functions
+  const openCategoryModal = (category?: Category) => {
+    if (category) {
+      setEditingCategory(category);
+      setCategoryFormData({
+        name: category.name,
+      });
+    } else {
+      setEditingCategory(null);
+      setCategoryFormData({
+        name: '',
+      });
+    }
+    setShowCategoryModal(true);
+  };
+
+  const closeCategoryModal = () => {
+    setShowCategoryModal(false);
+    setEditingCategory(null);
+  };
+
+  const handleCategorySubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      if (editingCategory) {
+        await categoriesAPI.update(editingCategory.id, categoryFormData);
+      } else {
+        await categoriesAPI.create(categoryFormData);
+      }
+      await fetchCategories();
+      closeCategoryModal();
+    } catch (error) {
+      alert('Xatolik yuz berdi. Iltimos, qayta urinib ko\'ring.');
+    }
+  };
+
+  const deleteCategory = async (id: number) => {
+    if (window.confirm('Bu kategoriyani o\'chirishni xohlaysizmi?')) {
+      try {
+        await categoriesAPI.delete(id);
+        await fetchCategories();
+      } catch (error) {
+        alert('Xatolik yuz berdi. Kategoriyada taomlar mavjud bo\'lishi mumkin.');
+      }
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -143,7 +211,7 @@ const AdminDashboard: React.FC = () => {
       {/* Header */}
       <header className="bg-white shadow-md">
         <div className="container mx-auto px-4 py-4 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Admin Panel - Taomlar</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Admin Panel</h1>
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full sm:w-auto">
             <button
               onClick={() => navigate('/')}
@@ -161,16 +229,44 @@ const AdminDashboard: React.FC = () => {
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
-        <div className="mb-6">
+      {/* Tabs */}
+      <div className="container mx-auto px-4">
+        <div className="flex border-b border-gray-200">
           <button
-            onClick={() => openModal()}
-            className="px-6 py-3 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-lg font-semibold hover:from-orange-600 hover:to-red-600 w-full sm:w-auto"
+            onClick={() => setActiveTab('meals')}
+            className={`px-6 py-3 font-medium text-sm ${
+              activeTab === 'meals'
+                ? 'border-b-2 border-orange-500 text-orange-600'
+                : 'text-gray-500 hover:text-gray-700'
+            }`}
           >
-            + Yangi taom qo'shish
+            Taomlar
+          </button>
+          <button
+            onClick={() => setActiveTab('categories')}
+            className={`px-6 py-3 font-medium text-sm ${
+              activeTab === 'categories'
+                ? 'border-b-2 border-orange-500 text-orange-600'
+                : 'text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            Kategoriyalar
           </button>
         </div>
+      </div>
+
+      {/* Main Content */}
+      <main className="container mx-auto px-4 py-8">
+        {activeTab === 'meals' && (
+          <>
+            <div className="mb-6">
+              <button
+                onClick={() => openModal()}
+                className="px-6 py-3 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-lg font-semibold hover:from-orange-600 hover:to-red-600 w-full sm:w-auto"
+              >
+                + Yangi taom qo'shish
+              </button>
+            </div>
 
         {/* Meals Table */}
         {meals && meals.length > 0 ? (
@@ -252,6 +348,88 @@ const AdminDashboard: React.FC = () => {
             </div>
           </div>
         )}
+          </>
+        )}
+
+        {activeTab === 'categories' && (
+          <>
+            <div className="mb-6">
+              <button
+                onClick={() => openCategoryModal()}
+                className="px-6 py-3 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-lg font-semibold hover:from-orange-600 hover:to-red-600 w-full sm:w-auto"
+              >
+                + Yangi kategoriya qo'shish
+              </button>
+            </div>
+
+            {/* Categories Table */}
+            {categories && categories.length > 0 ? (
+              <div className="bg-white rounded-lg shadow-md overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          ID
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Nomi
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Amallar
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {categories.map((category) => (
+                        <tr key={category.id} className="hover:bg-gray-50">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {category.id}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            {category.name}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <div className="flex space-x-2">
+                              <button
+                                onClick={() => openCategoryModal(category)}
+                                className="text-orange-600 hover:text-orange-900"
+                              >
+                                Tahrirlash
+                              </button>
+                              <button
+                                onClick={() => deleteCategory(category.id)}
+                                className="text-red-600 hover:text-red-900"
+                              >
+                                O'chirish
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                </svg>
+                <h3 className="mt-2 text-sm font-medium text-gray-900">Kategoriyalar yo'q</h3>
+                <p className="mt-1 text-sm text-gray-500">Yangi kategoriya qo'shish uchun yuqoridagi tugmani bosing.</p>
+                <div className="mt-6">
+                  <button
+                    onClick={() => openCategoryModal()}
+                    className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 w-full sm:w-auto justify-center"
+                  >
+                    + Birinchi kategoriyani qo'shish
+                  </button>
+                </div>
+              </div>
+            )}
+          </>
+        )}
       </main>
 
       {/* Modal */}
@@ -312,13 +490,19 @@ const AdminDashboard: React.FC = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Kategoriya</label>
-                  <input
-                    type="text"
-                    value={formData.category}
-                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                  <select
+                    value={formData.category_id}
+                    onChange={(e) => setFormData({ ...formData, category_id: e.target.value })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                     required
-                  />
+                  >
+                    <option value="">Kategoriyani tanlang</option>
+                    {categories.map((category) => (
+                      <option key={category.id} value={category.id}>
+                        {category.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
                 <div>
@@ -372,6 +556,48 @@ const AdminDashboard: React.FC = () => {
                     className="w-full sm:flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-300"
                   >
                     Bekor qilish
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Category Modal */}
+      {showCategoryModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg w-full max-w-md">
+            <div className="p-6">
+              <h2 className="text-2xl font-bold mb-4">
+                {editingCategory ? 'Kategoriyani tahrirlash' : 'Yangi kategoriya qo\'shish'}
+              </h2>
+              <form onSubmit={handleCategorySubmit} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Nomi</label>
+                  <input
+                    type="text"
+                    value={categoryFormData.name}
+                    onChange={(e) => setCategoryFormData({ ...categoryFormData, name: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    required
+                  />
+                </div>
+
+
+                <div className="flex justify-end space-x-3">
+                  <button
+                    type="button"
+                    onClick={closeCategoryModal}
+                    className="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300"
+                  >
+                    Bekor qilish
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600"
+                  >
+                    {editingCategory ? 'Yangilash' : 'Qo\'shish'}
                   </button>
                 </div>
               </form>

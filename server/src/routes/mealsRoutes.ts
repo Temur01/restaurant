@@ -76,7 +76,7 @@ router.get('/:id', getMealById);
  *         application/json:
  *           schema:
  *             type: object
- *             required: [name, image, description, price, category, ingredients]
+ *             required: [name, image, description, price, category_id, ingredients]
  *             properties:
  *               name:
  *                 type: string
@@ -86,8 +86,9 @@ router.get('/:id', getMealById);
  *                 type: string
  *               price:
  *                 type: integer
- *               category:
- *                 type: string
+ *               category_id:
+ *                 type: integer
+ *                 description: Category ID from categories table
  *               ingredients:
  *                 type: array
  *                 items:
@@ -129,8 +130,9 @@ router.post('/', authMiddleware, createMeal);
  *                 type: string
  *               price:
  *                 type: integer
- *               category:
- *                 type: string
+ *               category_id:
+ *                 type: integer
+ *                 description: Category ID from categories table
  *               ingredients:
  *                 type: array
  *                 items:

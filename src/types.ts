@@ -1,3 +1,10 @@
+export interface Category {
+  id: number;
+  name: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
 export interface Meal {
   id: number;
   name: string;
@@ -5,6 +12,10 @@ export interface Meal {
   ingredients: string[];
   description: string;
   price: number;
-  category: string;
+  category: string; // Keep for backward compatibility
+  category_id?: number;
+  category_info?: Category;
+  created_at?: string;
+  updated_at?: string;
 }
 

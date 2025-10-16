@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import authRoutes from './routes/authRoutes';
 import mealsRoutes from './routes/mealsRoutes';
+import categoriesRoutes from './routes/categoriesRoutes';
 import { specs, swaggerUi } from './config/swagger';
 
 dotenv.config();
@@ -89,6 +90,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, {
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/meals', mealsRoutes);
+app.use('/api/categories', categoriesRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
