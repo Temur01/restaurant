@@ -180,7 +180,7 @@ const HomePage: React.FC = () => {
 
         {/* Simple Menu Title */}
         <div className="text-center">
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-gray-900 via-orange-600 to-red-600 bg-clip-text text-transparent mb-6">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-gray-900 via-orange-600 to-red-600 bg-clip-text text-transparent mb-6">
             Menyu
           </h2>
         </div>

@@ -30,12 +30,7 @@ const Header: React.FC = () => {
 
       {/* Main Header */}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-        <div className="flex items-center justify-center gap-3">
-          <div className="bg-white p-2 sm:p-3 rounded-full shadow-lg">
-            <svg className="w-6 h-6 sm:w-8 sm:h-8 text-orange-500" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M6 3a1 1 0 011-1h6a1 1 0 011 1v1h3a1 1 0 110 2h-.5l-.77 8.47a2 2 0 01-1.99 1.86H7.26a2 2 0 01-1.99-1.86L4.5 6H4a1 1 0 010-2h3V3zm2 0h4v1H8V3z"/>
-            </svg>
-          </div>
+        <div className="flex items-center justify-center">
           <div>
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">Beyougli Karshi</h1>
             <p className="text-orange-100 text-xs sm:text-sm mt-0.5">Turkiya taomlari | Fast Food | Nonushta</p>
