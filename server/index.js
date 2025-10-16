@@ -3,7 +3,7 @@ console.log('🚀 Loading Vercel serverless function...');
 
 try {
   // Import the compiled Express app
-  const server = require('../dist/server.js');
+  const server = require('./dist/server.js');
   const app = server.default || server;
 
   // Ensure the app is properly initialized
