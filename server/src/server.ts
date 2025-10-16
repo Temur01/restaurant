@@ -108,11 +108,14 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
   res.status(500).json({ message: 'Server xatosi', error: err.message });
 });
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server ${PORT}-portda ishga tushdi`);
-  console.log(`📍 API: http://localhost:${PORT}/api`);
-  console.log(`📚 Swagger UI: http://localhost:${PORT}/api-docs`);
-});
+// Only start server if not in Vercel serverless environment
+if (process.env.VERCEL !== '1') {
+  app.listen(PORT, () => {
+    console.log(`🚀 Server ${PORT}-portda ishga tushdi`);
+    console.log(`📍 API: http://localhost:${PORT}/api`);
+    console.log(`📚 Swagger UI: http://localhost:${PORT}/api-docs`);
+  });
+}
 
 export default app;
 
