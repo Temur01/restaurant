@@ -22,21 +22,13 @@ try {
   const allowedOrigins = [
     'https://www.beyoglu-karshi.com',
     'https://beyoglu-karshi.com',
-    'http://localhost:3000', // for local development
-    'http://localhost:5173'  // if using Vite
+    'https://admin.beyoglu-karshi.com',
+    'http://localhost:3001',
+    'http://localhost:3000'
   ];
   
-  // Wrap the app to add debugging and handle Vercel-specific requirements
   const handler = (req, res) => {
-    console.log(`📥 Request: ${req.method} ${req.url}`);
-    console.log(`📍 Path: ${req.path || 'N/A'}`);
-    console.log(`🔍 Query:`, JSON.stringify(req.query));
-    console.log(`🌐 Origin:`, req.headers.origin);
-    
-    // Get the origin from the request
     const origin = req.headers.origin;
-    
-    // Check if the origin is allowed
     if (origin && allowedOrigins.includes(origin)) {
       res.setHeader('Access-Control-Allow-Origin', origin);
       res.setHeader('Access-Control-Allow-Credentials', 'true');
