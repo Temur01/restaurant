@@ -23,6 +23,7 @@ try {
     'https://www.beyoglu-karshi.com',
     'https://beyoglu-karshi.com',
     'https://admin.beyoglu-karshi.com',
+    'https://restaurant-gcfar8tmg-temur01s-projects.vercel.app',
     'http://localhost:3001',
     'http://localhost:3000'
   ];
