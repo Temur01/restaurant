@@ -19,11 +19,18 @@ try {
 
   console.log('✅ Express app loaded successfully');
 
-  // Wrap the app to add debugging
+  // Wrap the app to add debugging and handle Vercel-specific requirements
   const handler = (req, res) => {
     console.log(`📥 Request: ${req.method} ${req.url}`);
     console.log(`📍 Path: ${req.path || 'N/A'}`);
-    console.log(`🔍 Headers:`, JSON.stringify(req.headers));
+    console.log(`🔍 Query:`, JSON.stringify(req.query));
+    
+    // Ensure proper headers for CORS
+    res.setHeader('Access-Control-Allow-Origin', req.headers.origin || '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    
     return app(req, res);
   };
 
