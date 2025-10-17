@@ -2,7 +2,6 @@
 
 ## Frontend: beyoglu-karshi.com
 ## Backend: admin.beyoglu-karshi.com
-
 ---
 
 ## 📱 Frontend Setup (beyoglu-karshi.com)
