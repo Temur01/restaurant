@@ -3,10 +3,7 @@ import axios from 'axios';
 // Use environment variable for API URL
 // Production: https://beyoglu-karshi.uz/api
 // Development: http://localhost:3001/api
-const API_URL = (import.meta as any).env?.VITE_API_URL || 
-  ((import.meta as any).env?.MODE === 'production' 
-    ? 'https://beyoglu-karshi.uz/api'
-    : 'http://localhost:3001/api');
+const API_URL = "https://beyoglu-karshi.uz/api/api"
 
 const api = axios.create({
   baseURL: API_URL,
