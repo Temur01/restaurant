@@ -1,11 +1,11 @@
 import axios from 'axios';
 
 // Use environment variable for API URL
-// Production: https://restaurant-server-107q2b1rl-temur01s-projects.vercel.app/api
+// Production: https://beyoglu-karshi.uz/api
 // Development: http://localhost:3001/api
 const API_URL = (import.meta as any).env?.VITE_API_URL || 
   ((import.meta as any).env?.MODE === 'production' 
-    ? 'https://restaurant-server-107q2b1rl-temur01s-projects.vercel.app/api'
+    ? 'https://beyoglu-karshi.uz/api'
     : 'http://localhost:3001/api');
 
 const api = axios.create({
