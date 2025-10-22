@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { mealsAPI, authAPI, categoriesAPI } from '../services/api';
+import { authAPI, adminMealsAPI, adminCategoriesAPI } from '../services/api';
 import { Meal, Category } from '../types';
 
 const AdminDashboard: React.FC = () => {
@@ -48,7 +48,7 @@ const AdminDashboard: React.FC = () => {
 
   const fetchMeals = async () => {
     try {
-      const data = await mealsAPI.getAll();
+      const data = await adminMealsAPI.getAll();
       setMeals(data.meals || []);
     } catch (error) {
       setMeals([]);
@@ -58,7 +58,7 @@ const AdminDashboard: React.FC = () => {
 
   const fetchCategories = async () => {
     try {
-      const data = await categoriesAPI.getAll();
+      const data = await adminCategoriesAPI.getAll();
       setCategories(data.categories || []);
     } catch (error) {
       setCategories([]);
@@ -146,9 +146,9 @@ const AdminDashboard: React.FC = () => {
       }
       
       if (editingMeal) {
-        await mealsAPI.update(editingMeal.id, dataToSend);
+        await adminMealsAPI.update(editingMeal.id, dataToSend);
       } else {
-        await mealsAPI.create(dataToSend);
+        await adminMealsAPI.create(dataToSend);
       }
       fetchMeals();
       closeModal();
@@ -160,7 +160,7 @@ const AdminDashboard: React.FC = () => {
   const handleDelete = async (id: number) => {
     if (window.confirm('Rostdan ham o\'chirmoqchimisiz?')) {
       try {
-        await mealsAPI.delete(id);
+        await adminMealsAPI.delete(id);
         fetchMeals();
       } catch (error: any) {
         alert(error.response?.data?.message || 'Xatolik yuz berdi');
@@ -210,9 +210,9 @@ const AdminDashboard: React.FC = () => {
     e.preventDefault();
     try {
       if (editingCategory) {
-        await categoriesAPI.update(editingCategory.id, categoryFormData);
+        await adminCategoriesAPI.update(editingCategory.id, categoryFormData);
       } else {
-        await categoriesAPI.create(categoryFormData);
+        await adminCategoriesAPI.create(categoryFormData);
       }
       await fetchCategories();
       closeCategoryModal();
@@ -224,7 +224,7 @@ const AdminDashboard: React.FC = () => {
   const deleteCategory = async (id: number) => {
     if (window.confirm('Bu kategoriyani o\'chirishni xohlaysizmi?')) {
       try {
-        await categoriesAPI.delete(id);
+        await adminCategoriesAPI.delete(id);
         await fetchCategories();
       } catch (error) {
         alert('Xatolik yuz berdi. Kategoriyada taomlar mavjud bo\'lishi mumkin.');

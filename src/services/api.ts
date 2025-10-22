@@ -4,6 +4,7 @@ import axios from 'axios';
 // Production: https://beyoglu-karshi.uz/api
 // Development: http://localhost:3001/api
 const API_URL = "https://beyoglu-karshi.uz/api/api"
+// const API_URL = "http://localhost:3001/api"
 
 const api = axios.create({
   baseURL: API_URL,
@@ -63,6 +64,36 @@ export const mealsAPI = {
   },
 };
 
+// Admin Meals API
+export const adminMealsAPI = {
+  getAll: async () => {
+    const response = await api.get('/admin/meals');
+    return response.data;
+  },
+  getById: async (id: number) => {
+    const response = await api.get(`/admin/meals/${id}`);
+    return response.data;
+  },
+  create: async (meal: any) => {
+    const config = meal instanceof FormData 
+      ? { headers: { 'Content-Type': 'multipart/form-data' } }
+      : {};
+    const response = await api.post('/admin/meals', meal, config);
+    return response.data;
+  },
+  update: async (id: number, meal: any) => {
+    const config = meal instanceof FormData 
+      ? { headers: { 'Content-Type': 'multipart/form-data' } }
+      : {};
+    const response = await api.put(`/admin/meals/${id}`, meal, config);
+    return response.data;
+  },
+  delete: async (id: number) => {
+    const response = await api.delete(`/admin/meals/${id}`);
+    return response.data;
+  },
+};
+
 // Categories API
 export const categoriesAPI = {
   getAll: async () => {
@@ -83,6 +114,30 @@ export const categoriesAPI = {
   },
   delete: async (id: number) => {
     const response = await api.delete(`/categories/${id}`);
+    return response.data;
+  },
+};
+
+// Admin Categories API
+export const adminCategoriesAPI = {
+  getAll: async () => {
+    const response = await api.get('/admin/categories');
+    return response.data;
+  },
+  getById: async (id: number) => {
+    const response = await api.get(`/admin/categories/${id}`);
+    return response.data;
+  },
+  create: async (category: any) => {
+    const response = await api.post('/admin/categories', category);
+    return response.data;
+  },
+  update: async (id: number, category: any) => {
+    const response = await api.put(`/admin/categories/${id}`, category);
+    return response.data;
+  },
+  delete: async (id: number) => {
+    const response = await api.delete(`/admin/categories/${id}`);
     return response.data;
   },
 };
