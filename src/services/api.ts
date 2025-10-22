@@ -6,6 +6,30 @@ import axios from 'axios';
 const API_URL = "https://beyoglu-karshi.uz/api/api"
 // const API_URL = "http://localhost:3001/api"
 
+// Utility function to fix image URLs
+const fixImageUrl = (url: string): string => {
+  if (!url) return url;
+  // If URL contains localhost:5000, replace it with the production URL
+  if (url.includes('localhost:5000')) {
+    return url.replace('http://localhost:5000/uploads/', 'https://beyoglu-karshi.uz/api/uploads/');
+  }
+  return url;
+};
+
+// Function to transform meal object URLs
+const transformMealImageUrl = (meal: any): any => {
+  if (!meal) return meal;
+  return {
+    ...meal,
+    image: fixImageUrl(meal.image),
+  };
+};
+
+// Function to transform array of meals
+const transformMealsArray = (meals: any[]): any[] => {
+  return Array.isArray(meals) ? meals.map(transformMealImageUrl) : [];
+};
+
 const api = axios.create({
   baseURL: API_URL,
   headers: {
@@ -38,25 +62,37 @@ export const authAPI = {
 export const mealsAPI = {
   getAll: async () => {
     const response = await api.get('/meals');
-    return response.data;
+    return {
+      ...response.data,
+      meals: transformMealsArray(response.data?.meals),
+    };
   },
   getById: async (id: number) => {
     const response = await api.get(`/meals/${id}`);
-    return response.data;
+    return {
+      ...response.data,
+      meal: transformMealImageUrl(response.data?.meal),
+    };
   },
   create: async (meal: any) => {
     const config = meal instanceof FormData 
       ? { headers: { 'Content-Type': 'multipart/form-data' } }
       : {};
     const response = await api.post('/meals', meal, config);
-    return response.data;
+    return {
+      ...response.data,
+      meal: transformMealImageUrl(response.data?.meal),
+    };
   },
   update: async (id: number, meal: any) => {
     const config = meal instanceof FormData 
       ? { headers: { 'Content-Type': 'multipart/form-data' } }
       : {};
     const response = await api.put(`/meals/${id}`, meal, config);
-    return response.data;
+    return {
+      ...response.data,
+      meal: transformMealImageUrl(response.data?.meal),
+    };
   },
   delete: async (id: number) => {
     const response = await api.delete(`/meals/${id}`);
@@ -68,25 +104,37 @@ export const mealsAPI = {
 export const adminMealsAPI = {
   getAll: async () => {
     const response = await api.get('/admin/meals');
-    return response.data;
+    return {
+      ...response.data,
+      meals: transformMealsArray(response.data?.meals),
+    };
   },
   getById: async (id: number) => {
     const response = await api.get(`/admin/meals/${id}`);
-    return response.data;
+    return {
+      ...response.data,
+      meal: transformMealImageUrl(response.data?.meal),
+    };
   },
   create: async (meal: any) => {
     const config = meal instanceof FormData 
       ? { headers: { 'Content-Type': 'multipart/form-data' } }
       : {};
     const response = await api.post('/admin/meals', meal, config);
-    return response.data;
+    return {
+      ...response.data,
+      meal: transformMealImageUrl(response.data?.meal),
+    };
   },
   update: async (id: number, meal: any) => {
     const config = meal instanceof FormData 
       ? { headers: { 'Content-Type': 'multipart/form-data' } }
       : {};
     const response = await api.put(`/admin/meals/${id}`, meal, config);
-    return response.data;
+    return {
+      ...response.data,
+      meal: transformMealImageUrl(response.data?.meal),
+    };
   },
   delete: async (id: number) => {
     const response = await api.delete(`/admin/meals/${id}`);
