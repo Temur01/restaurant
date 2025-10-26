@@ -8,7 +8,7 @@ import { mealsAPI, categoriesAPI } from '../services/api';
 
 // Import slider images
 import slider1 from '../assets/slider_1.JPG';
-import slider2 from '../assets/slider_2.JPG';
+// import slider2 from '../assets/slider_2.JPG';
 import slider3 from '../assets/slider_3.JPG';
 
 const HomePage: React.FC = () => {
@@ -22,7 +22,7 @@ const HomePage: React.FC = () => {
   // Slider images
   const sliderImages = [
     slider1,
-    slider2,
+    // slider2,
     slider3
   ];
 
@@ -49,8 +49,7 @@ const HomePage: React.FC = () => {
     try {
       const data = await categoriesAPI.getAll();
       setCategories(data?.categories || []);
-    } catch (err) {
-      console.error('Categories fetch error:', err);
+    } catch (_) {
       // Use sample categories if API fails
       setCategories(getSampleCategories());
     } finally {
