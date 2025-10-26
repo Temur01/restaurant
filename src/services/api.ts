@@ -24,6 +24,8 @@ const transformMealImageUrl = (meal: any): any => {
     image: fixImageUrl(meal.image),
     // Ensure category is a string for backward compatibility
     category: meal.category_info?.name || meal.category || 'Unknown',
+    // Convert category_id to number
+    category_id: meal.category_id ? Number(meal.category_id) : undefined,
   };
 };
 
