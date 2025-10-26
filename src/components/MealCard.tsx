@@ -18,19 +18,21 @@ const MealCard: React.FC<MealCardProps> = ({ meal }) => {
         className="group bg-white rounded-3xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1 hover:scale-105"
         onClick={openModal}
       >
-        {/* Image Section */}
-        <div 
-          className="relative h-40 sm:h-48 lg:h-56 overflow-hidden min-h-[160px]"
-          style={{
-            backgroundImage: `url(${meal.image})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat'
-          }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
-          
-        </div>
+        {/* Image Section - Only show if image exists */}
+        {meal.image && (
+          <div 
+            className="relative h-40 sm:h-48 lg:h-56 overflow-hidden min-h-[160px]"
+            style={{
+              backgroundImage: `url(${meal.image})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat'
+            }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
+            
+          </div>
+        )}
 
         {/* Name Section */}
         <div className="p-3 sm:p-6 text-center">
@@ -67,22 +69,35 @@ const MealCard: React.FC<MealCardProps> = ({ meal }) => {
 
             {/* Modal Content */}
             <div className="p-6">
-              {/* Image */}
-              <div 
-                className="relative mb-6 rounded-xl overflow-hidden min-h-[288px]"
-                style={{
-                  backgroundImage: `url(${meal.image})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  backgroundRepeat: 'no-repeat'
-                }}
-              >
-                <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg">
-                  <span className="text-orange-600 font-bold text-lg">
-                    {meal.price === 0 ? 'Bepul' : `${meal.price.toLocaleString()} so'm`}
-                  </span>
+              {/* Image - Only show if image exists */}
+              {meal.image && (
+                <div 
+                  className="relative mb-6 rounded-xl overflow-hidden min-h-[288px]"
+                  style={{
+                    backgroundImage: `url(${meal.image})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat'
+                  }}
+                >
+                  <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg">
+                    <span className="text-orange-600 font-bold text-lg">
+                      {meal.price === 0 ? 'Bepul' : `${meal.price.toLocaleString()} so'm`}
+                    </span>
+                  </div>
                 </div>
-              </div>
+              )}
+              
+              {/* Price display when no image */}
+              {!meal.image && (
+                <div className="mb-6 text-center">
+                  <div className="inline-block bg-gradient-to-r from-orange-500 to-red-500 text-white px-6 py-3 rounded-full shadow-lg">
+                    <span className="text-xl font-bold">
+                      {meal.price === 0 ? 'Bepul' : `${meal.price.toLocaleString()} so'm`}
+                    </span>
+                  </div>
+                </div>
+              )}
 
               {/* Description */}
               <div className="mb-6">

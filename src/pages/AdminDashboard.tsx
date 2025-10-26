@@ -17,6 +17,7 @@ const AdminDashboard: React.FC = () => {
     image: '',
     description: '',
     price: "" as string | number,
+    orderNumber: "" as string | number,
     category_id: '' as string | number,
     ingredients: [] as string[],
   });
@@ -79,13 +80,14 @@ const AdminDashboard: React.FC = () => {
       setEditingMeal(meal);
       setFormData({
         name: meal.name,
-        image: meal.image,
+        image: meal.image || '',
         description: meal.description,
         price: meal.price.toString(), // Convert number to string for form
+        orderNumber: meal.orderNumber?.toString() || '',
         category_id: meal.category_id || '',
         ingredients: meal.ingredients,
       });
-      setImagePreview(meal.image);
+      setImagePreview(meal.image || '');
     } else {
       setEditingMeal(null);
       setFormData({
@@ -93,6 +95,7 @@ const AdminDashboard: React.FC = () => {
         image: '',
         description: '',
         price: '',
+        orderNumber: '',
         category_id: '',
         ingredients: [],
       });
@@ -131,8 +134,9 @@ const AdminDashboard: React.FC = () => {
         // If file is selected, create FormData for file upload
         const formDataToSend = new FormData();
         formDataToSend.append('name', formData.name);
-        formDataToSend.append('description', formData.description);
+        formDataToSend.append('description', formData.description || '');
         formDataToSend.append('price', (Number(formData.price) || 0).toString());
+        formDataToSend.append('orderNumber', (Number(formData.orderNumber) || 0).toString());
         formDataToSend.append('category_id', formData.category_id.toString());
         formDataToSend.append('ingredients', JSON.stringify(formData.ingredients));
         formDataToSend.append('image', selectedFile);
@@ -142,7 +146,10 @@ const AdminDashboard: React.FC = () => {
         // If no file, send regular JSON data
         dataToSend = {
           ...formData,
-          price: Number(formData.price) || 0
+          description: formData.description || '',
+          image: formData.image || '',
+          price: Number(formData.price) || 0,
+          orderNumber: Number(formData.orderNumber) || 0
         };
       }
       
@@ -338,7 +345,13 @@ const AdminDashboard: React.FC = () => {
                 {meals.map((meal) => (
                   <tr key={meal.id}>
                     <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
-                      <img src={meal.image} alt={meal.name} className="w-12 h-12 sm:w-16 sm:h-16 object-cover rounded" />
+                      {meal.image ? (
+                        <img src={meal.image} alt={meal.name} className="w-12 h-12 sm:w-16 sm:h-16 object-cover rounded" />
+                      ) : (
+                        <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gray-200 rounded flex items-center justify-center">
+                          <span className="text-gray-400 text-xs">No image</span>
+                        </div>
+                      )}
                     </td>
                     <td className="px-3 sm:px-6 py-3 sm:py-4">
                       <div className="text-xs sm:text-sm font-medium text-gray-900">{meal.name}</div>
@@ -490,7 +503,9 @@ const AdminDashboard: React.FC = () => {
               </h2>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Nom <span className="text-red-500">*</span>
+                  </label>
                   <input
                     type="text"
                     value={formData.name}
@@ -501,7 +516,7 @@ const AdminDashboard: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Rasm</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Rasm (ixtiyoriy)</label>
                   <div className="space-y-3">
                     {/* File Upload */}
                     <div>
@@ -545,18 +560,20 @@ const AdminDashboard: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Tavsif</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Tavsif (ixtiyoriy)</label>
                   <textarea
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                     rows={3}
-                    required
+                    placeholder="Taom haqida qo'shimcha ma'lumot..."
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Narx (so'm)</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Narx (so'm) <span className="text-red-500">*</span>
+                  </label>
                   <div className="relative">
                     <input
                       type="number"
@@ -564,13 +581,33 @@ const AdminDashboard: React.FC = () => {
                       onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                       className="w-full px-3 py-2 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                       placeholder="0"
+                      required
+                      min="0"
                     />
                     <span className="absolute right-3 top-2 text-gray-500 text-sm">so'm</span>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Kategoriya</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Tartib raqami <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    value={formData.orderNumber}
+                    onChange={(e) => setFormData({ ...formData, orderNumber: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    placeholder="0"
+                    required
+                    min="0"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Taomlar ushbu tartib raqami bo'yicha ko'rsatiladi</p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Kategoriya <span className="text-red-500">*</span>
+                  </label>
                   <select
                     value={formData.category_id}
                     onChange={(e) => setFormData({ ...formData, category_id: e.target.value })}
@@ -587,7 +624,7 @@ const AdminDashboard: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Tarkib</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Tarkib (ixtiyoriy)</label>
                   <div className="flex flex-col sm:flex-row gap-2 mb-2">
                     <input
                       type="text"

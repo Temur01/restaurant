@@ -9,10 +9,11 @@ export interface Category {
 export interface Meal {
   id: number;
   name: string;
-  image: string;
+  image?: string;
   ingredients: string[];
   description: string;
   price: number;
+  orderNumber?: number;
   category: string; // Keep for backward compatibility
   category_id?: number;
   category_info?: Category;
