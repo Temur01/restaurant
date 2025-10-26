@@ -22,6 +22,7 @@ const AdminDashboard: React.FC = () => {
   });
   const [categoryFormData, setCategoryFormData] = useState({
     name: '',
+    orderNumber: '' as string | number,
   });
   const [ingredientInput, setIngredientInput] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -191,11 +192,13 @@ const AdminDashboard: React.FC = () => {
       setEditingCategory(category);
       setCategoryFormData({
         name: category.name,
+        orderNumber: category.orderNumber || '',
       });
     } else {
       setEditingCategory(null);
       setCategoryFormData({
         name: '',
+        orderNumber: '',
       });
     }
     setShowCategoryModal(true);
@@ -209,10 +212,15 @@ const AdminDashboard: React.FC = () => {
   const handleCategorySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      const dataToSend = {
+        ...categoryFormData,
+        orderNumber: Number(categoryFormData.orderNumber) || 0
+      };
+      
       if (editingCategory) {
-        await adminCategoriesAPI.update(editingCategory.id, categoryFormData);
+        await adminCategoriesAPI.update(editingCategory.id, dataToSend);
       } else {
-        await adminCategoriesAPI.create(categoryFormData);
+        await adminCategoriesAPI.create(dataToSend);
       }
       await fetchCategories();
       closeCategoryModal();
@@ -410,6 +418,9 @@ const AdminDashboard: React.FC = () => {
                           Nomi
                         </th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Tartib raqami
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Amallar
                         </th>
                       </tr>
@@ -422,6 +433,9 @@ const AdminDashboard: React.FC = () => {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                             {category.name}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {category.orderNumber || 0}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div className="flex space-x-2">
@@ -648,6 +662,18 @@ const AdminDashboard: React.FC = () => {
                     onChange={(e) => setCategoryFormData({ ...categoryFormData, name: e.target.value })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                     required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Tartib raqami</label>
+                  <input
+                    type="number"
+                    value={categoryFormData.orderNumber}
+                    onChange={(e) => setCategoryFormData({ ...categoryFormData, orderNumber: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    placeholder="0"
+                    min="0"
                   />
                 </div>
 
