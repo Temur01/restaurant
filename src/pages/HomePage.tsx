@@ -6,18 +6,24 @@ import ImageSlider from '../components/ImageSlider';
 import { Meal, Category } from '../types';
 import { mealsAPI, categoriesAPI } from '../services/api';
 
+// Import slider images
+import slider1 from '../assets/slider_1.JPG';
+import slider2 from '../assets/slider_2.JPG';
+import slider3 from '../assets/slider_3.JPG';
+
 const HomePage: React.FC = () => {
   const [meals, setMeals] = useState<Meal[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
+
+  const [_, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('Barchasi');
 
   // Slider images
   const sliderImages = [
-    '/src/assets/slider_1.JPG',
-    '/src/assets/slider_2.JPG',
-    '/src/assets/slider_3.JPG'
+    slider1,
+    slider2,
+    slider3
   ];
 
   useEffect(() => {
@@ -33,6 +39,7 @@ const HomePage: React.FC = () => {
       const data = await mealsAPI.getAll();
       setMeals(data?.meals || []);
     } catch (err) {
+      console.error('Error fetching meals:', err);
       setError('Backend serverga ulanib bo\'lmadi. Namuna ma\'lumotlar ko\'rsatilmoqda.');
       setMeals(getSampleMeals());
     }
@@ -129,12 +136,10 @@ const HomePage: React.FC = () => {
 
   // Get categories for filter
   const getCategoriesForFilter = (): string[] => {
-    if (categories.length > 0) {
-      return ['Barchasi', ...categories.map(cat => cat.name)];
-    }
-    // Fallback to meal categories if API categories not available
+    // Always use meal categories since they're more accurate
     const mealCategories = meals.map(meal => meal.category);
-    return ['Barchasi', ...Array.from(new Set(mealCategories))];
+    const uniqueCategories = ['Barchasi', ...Array.from(new Set(mealCategories))];
+    return uniqueCategories;
   };
 
   if (loading) {

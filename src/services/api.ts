@@ -16,12 +16,14 @@ const fixImageUrl = (url: string): string => {
   return url;
 };
 
-// Function to transform meal object URLs
+// Function to transform meal object URLs and fix category structure
 const transformMealImageUrl = (meal: any): any => {
   if (!meal) return meal;
   return {
     ...meal,
     image: fixImageUrl(meal.image),
+    // Ensure category is a string for backward compatibility
+    category: meal.category_info?.name || meal.category || 'Unknown',
   };
 };
 
