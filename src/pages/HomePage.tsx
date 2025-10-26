@@ -123,14 +123,6 @@ const HomePage: React.FC = () => {
     return ['Barchasi', ...Array.from(new Set(mealCategories))];
   };
 
-  // Filter meals by selected category
-  const getFilteredMeals = (): Meal[] => {
-    if (selectedCategory === 'Barchasi') {
-      return meals;
-    }
-    return meals.filter(meal => meal.category === selectedCategory);
-  };
-
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
@@ -210,18 +202,36 @@ const HomePage: React.FC = () => {
           </div>
         )}
 
-        {/* Enhanced Meal Grid Layout */}
+        {/* Meals Grouped by Category */}
         {meals && meals.length > 0 ? (
-          <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:gap-8">
-            {getFilteredMeals().map((meal, index) => (
-              <div
-                key={meal.id}
-                className="animate-fade-in-up"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                <MealCard meal={meal} />
-              </div>
-            ))}
+          <div className="space-y-8 sm:space-y-12">
+            {getCategoriesForFilter().slice(1).map((category, categoryIndex) => {
+              const categoryMeals = meals.filter(meal => meal.category === category);
+              
+              if (categoryMeals.length === 0) return null;
+              
+              return (
+                <div key={category} className="animate-fade-in-up" style={{ animationDelay: `${categoryIndex * 200}ms` }}>
+                  {/* Category Title */}
+                  <h3 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4 sm:mb-6">
+                    {category}
+                  </h3>
+                  
+                  {/* Meals Grid for this Category */}
+                  <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:gap-8">
+                    {categoryMeals.map((meal, mealIndex) => (
+                      <div
+                        key={meal.id}
+                        className="animate-fade-in-up"
+                        style={{ animationDelay: `${(categoryIndex * 200) + (mealIndex * 100)}ms` }}
+                      >
+                        <MealCard meal={meal} />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         ) : (
           <div className="text-center py-20">
