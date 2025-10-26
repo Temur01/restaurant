@@ -6,6 +6,43 @@
   body {
     @apply bg-gray-50;
   }
+  
+  .container {
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: 1rem;
+    max-width: none; /* Override Tailwind's default max-width */
+  }
+  
+  @media (min-width: 640px) {
+    .container {
+      padding-inline: 1.5rem;
+    }
+  }
+  
+  @media (min-width: 768px) {
+    .container {
+      padding-inline: 2rem;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .container {
+      padding-inline: 2.5rem;
+    }
+  }
+  
+  @media (min-width: 1280px) {
+    .container {
+      padding-inline: 3rem;
+    }
+  }
+  
+  @media (min-width: 1536px) {
+    .container {
+      padding-inline: 3.5rem;
+    }
+  }
 }
 
 @layer utilities {

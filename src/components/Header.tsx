@@ -5,7 +5,7 @@ const Header: React.FC = () => {
     <header className="bg-gradient-to-r from-orange-600 via-red-500 to-pink-500 text-white sticky top-0 z-50 shadow-xl">
       {/* Top Bar */}
       <div className="bg-black bg-opacity-20 py-2">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row justify-between items-center text-xs sm:text-sm gap-2 sm:gap-0">
             <div className="flex items-center gap-4">
               <span className="flex items-center gap-1">
@@ -29,7 +29,7 @@ const Header: React.FC = () => {
       </div>
 
       {/* Main Header */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+      <div className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
         <div className="flex flex-col items-center justify-center">
           {/* <img 
             src="/src/assets/logo.JPG" 

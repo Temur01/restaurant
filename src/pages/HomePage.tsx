@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import MealCard from '../components/MealCard';
+import ImageSlider from '../components/ImageSlider';
 import { Meal, Category } from '../types';
 import { mealsAPI, categoriesAPI } from '../services/api';
 
@@ -11,6 +12,13 @@ const HomePage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('Barchasi');
+
+  // Slider images
+  const sliderImages = [
+    '/src/assets/slider_1.JPG',
+    '/src/assets/slider_2.JPG',
+    '/src/assets/slider_3.JPG'
+  ];
 
   useEffect(() => {
     fetchData();
@@ -151,7 +159,20 @@ const HomePage: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100">
       <Header />
       
-      <main className="container mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 lg:py-16">
+      {/* Image Slider Section */}
+      <section className="w-full mt-8">
+        <div className="px-3 sm:px-6 lg:px-8">
+          <ImageSlider 
+            images={sliderImages}
+            autoPlay={true}
+            autoPlayInterval={4000}
+            showDots={true}
+            className="w-full"
+          />
+        </div>
+      </section>
+      
+      <main className="px-3 sm:px-6 lg:px-8 py-4 sm:py-8 lg:py-16">
         {/* Error Message */}
         {error && (
           <div className="mb-8 bg-gradient-to-r from-yellow-50 to-orange-50 border-l-4 border-yellow-400 rounded-lg shadow-sm animate-fade-in">
