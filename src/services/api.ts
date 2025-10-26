@@ -79,20 +79,36 @@ export const mealsAPI = {
     };
   },
   create: async (meal: any) => {
+    // Convert category_id to number if it exists
+    const processedMeal = meal instanceof FormData 
+      ? meal 
+      : {
+          ...meal,
+          category_id: meal.category_id ? Number(meal.category_id) : meal.category_id
+        };
+    
     const config = meal instanceof FormData 
       ? { headers: { 'Content-Type': 'multipart/form-data' } }
       : {};
-    const response = await api.post('/meals', meal, config);
+    const response = await api.post('/meals', processedMeal, config);
     return {
       ...response.data,
       meal: transformMealImageUrl(response.data?.meal),
     };
   },
   update: async (id: number, meal: any) => {
+    // Convert category_id to number if it exists
+    const processedMeal = meal instanceof FormData 
+      ? meal 
+      : {
+          ...meal,
+          category_id: meal.category_id ? Number(meal.category_id) : meal.category_id
+        };
+    
     const config = meal instanceof FormData 
       ? { headers: { 'Content-Type': 'multipart/form-data' } }
       : {};
-    const response = await api.put(`/meals/${id}`, meal, config);
+    const response = await api.put(`/meals/${id}`, processedMeal, config);
     return {
       ...response.data,
       meal: transformMealImageUrl(response.data?.meal),
@@ -121,20 +137,36 @@ export const adminMealsAPI = {
     };
   },
   create: async (meal: any) => {
+    // Convert category_id to number if it exists
+    const processedMeal = meal instanceof FormData 
+      ? meal 
+      : {
+          ...meal,
+          category_id: meal.category_id ? Number(meal.category_id) : meal.category_id
+        };
+    
     const config = meal instanceof FormData 
       ? { headers: { 'Content-Type': 'multipart/form-data' } }
       : {};
-    const response = await api.post('/admin/meals', meal, config);
+    const response = await api.post('/admin/meals', processedMeal, config);
     return {
       ...response.data,
       meal: transformMealImageUrl(response.data?.meal),
     };
   },
   update: async (id: number, meal: any) => {
+    // Convert category_id to number if it exists
+    const processedMeal = meal instanceof FormData 
+      ? meal 
+      : {
+          ...meal,
+          category_id: meal.category_id ? Number(meal.category_id) : meal.category_id
+        };
+    
     const config = meal instanceof FormData 
       ? { headers: { 'Content-Type': 'multipart/form-data' } }
       : {};
-    const response = await api.put(`/admin/meals/${id}`, meal, config);
+    const response = await api.put(`/admin/meals/${id}`, processedMeal, config);
     return {
       ...response.data,
       meal: transformMealImageUrl(response.data?.meal),
