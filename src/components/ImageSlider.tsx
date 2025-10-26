@@ -50,14 +50,14 @@ const ImageSlider: React.FC<ImageSliderProps> = ({
           {images.map((image, index) => (
             <div
               key={index}
-              className="w-full h-full flex-shrink-0 relative"
+              className="w-full h-full flex-shrink-0 relative bg-cover bg-center bg-no-repeat transition-all duration-300 hover:scale-105 bg-gray-200"
+              style={{
+                backgroundImage: `url(${image})`,
+                backgroundAttachment: 'fixed'
+              }}
+              role="img"
+              aria-label={`Slider image ${index + 1}`}
             >
-              <img
-                src={image}
-                alt={`Slider image ${index + 1}`}
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
               {/* Overlay for better text readability */}
               <div className="absolute inset-0 bg-black bg-opacity-20"></div>
             </div>
