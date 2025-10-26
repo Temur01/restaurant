@@ -9,7 +9,7 @@ const App: React.FC = () => {
   const isAdminSubdomain = window.location.hostname === 'admin.beyoglu-karshi.com';
 
   return (
-    <Router future={{ v7_startTransition: true }}>
+    <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Routes>
         <Route 
           path="/" 
