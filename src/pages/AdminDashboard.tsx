@@ -289,7 +289,7 @@ const AdminDashboard: React.FC = () => {
                 : 'text-gray-500 hover:text-gray-700'
             }`}
           >
-            Taomlar
+            Taomlar ({meals.length})
           </button>
           <button
             onClick={() => setActiveTab('categories')}
@@ -299,7 +299,7 @@ const AdminDashboard: React.FC = () => {
                 : 'text-gray-500 hover:text-gray-700'
             }`}
           >
-            Kategoriyalar
+            Kategoriyalar ({categories.length})
           </button>
         </div>
       </div>
