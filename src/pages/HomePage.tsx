@@ -66,7 +66,7 @@ const HomePage: React.FC = () => {
         ingredients: ['Guruch', "Qo'y go'shti", 'Sabzi', 'Piyoz', 'Noxat', 'Zira', "Yog'"],
         description: 'Milliy taomimiz, to\'ylar va bayramlarda tayyorlanadigan, guruch, go\'sht va sabzi asosida pishiriladigan mazali palov.',
         price: 25000,
-        orderNumber: 1,
+        ordernumber: 1,
         category: 'Milliy taomlar'
       },
       {
@@ -76,7 +76,7 @@ const HomePage: React.FC = () => {
         ingredients: ["Qo'y go'shti", 'Piyoz', 'Ziravorlar', 'Sirka', 'Tuz'],
         description: 'Cho\'g\' ustida pishirilgan, nozik va yumshoq qo\'y go\'shti shashlik.',
         price: 30000,
-        orderNumber: 2,
+        ordernumber: 2,
         category: "Go'sht taomlar"
       },
       {
@@ -86,7 +86,7 @@ const HomePage: React.FC = () => {
         ingredients: ["Qo'l lag'mon", "Go'sht", 'Sabzavotlar', 'Kartoshka'],
         description: 'Qo\'lda cho\'zilgan maxsus lag\'mon, go\'sht va sabzavotlar bilan.',
         price: 22000,
-        orderNumber: 3,
+        ordernumber: 3,
         category: "Sho'rvalar"
       },
       {
@@ -96,7 +96,7 @@ const HomePage: React.FC = () => {
         ingredients: ['Un', "Go'sht", 'Piyoz', 'Tuz'],
         description: 'Bug\'da pishirilgan, ichiga go\'sht va piyoz solingan manti.',
         price: 18000,
-        orderNumber: 4,
+        ordernumber: 4,
         category: 'Milliy taomlar'
       },
       {
@@ -106,7 +106,7 @@ const HomePage: React.FC = () => {
         ingredients: ['Xamir', "Qo'y go'shti", 'Piyoz'],
         description: 'Tandirda pishirilgan, mazali go\'sht va piyoz solingan somsa.',
         price: 8000,
-        orderNumber: 5,
+        ordernumber: 5,
         category: 'Non mahsulotlari'
       },
       {
@@ -116,7 +116,7 @@ const HomePage: React.FC = () => {
         ingredients: ['Un', 'Suv', 'Tuz', 'Kunjut'],
         description: 'Tandirda pishirilgan, issiq va mazali milliy non.',
         price: 3000,
-        orderNumber: 6,
+        ordernumber: 6,
         category: 'Non mahsulotlari'
       }
     ];
@@ -239,7 +239,7 @@ const HomePage: React.FC = () => {
             {getCategoriesForFilter().slice(1).map((category, categoryIndex) => {
               const categoryMeals = meals
                 .filter(meal => meal.category === category)
-                .sort((a, b) => (a.orderNumber || 0) - (b.orderNumber || 0));
+                .sort((a, b) => (a.ordernumber || 0) - (b.ordernumber || 0));
               
               if (categoryMeals.length === 0) return null;
               

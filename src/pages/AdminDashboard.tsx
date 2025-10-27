@@ -17,13 +17,13 @@ const AdminDashboard: React.FC = () => {
     image: '',
     description: '',
     price: "" as string | number,
-    orderNumber: "" as string | number,
+    ordernumber: "" as string | number,
     category_id: '' as string | number,
     ingredients: [] as string[],
   });
   const [categoryFormData, setCategoryFormData] = useState({
     name: '',
-    orderNumber: '' as string | number,
+    ordernumber: '' as string | number,
   });
   const [ingredientInput, setIngredientInput] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -83,7 +83,7 @@ const AdminDashboard: React.FC = () => {
         image: meal.image || '',
         description: meal.description,
         price: meal.price.toString(), // Convert number to string for form
-        orderNumber: meal.ordernumber?.toString() || '',
+        ordernumber: meal.ordernumber?.toString() || '',
         category_id: meal.category_id || '',
         ingredients: meal.ingredients,
       });
@@ -95,7 +95,7 @@ const AdminDashboard: React.FC = () => {
         image: '',
         description: '',
         price: '',
-        orderNumber: '',
+        ordernumber: '',
         category_id: '',
         ingredients: [],
       });
@@ -136,7 +136,7 @@ const AdminDashboard: React.FC = () => {
         formDataToSend.append('name', formData.name);
         formDataToSend.append('description', formData.description || '');
         formDataToSend.append('price', (Number(formData.price) || 0).toString());
-        formDataToSend.append('orderNumber', (Number(formData.orderNumber) || 0).toString());
+        formDataToSend.append('ordernumber', (Number(formData.ordernumber) || 0).toString());
         formDataToSend.append('category_id', formData.category_id.toString());
         formDataToSend.append('ingredients', JSON.stringify(formData.ingredients));
         formDataToSend.append('image', selectedFile);
@@ -149,7 +149,7 @@ const AdminDashboard: React.FC = () => {
           description: formData.description || '',
           image: formData.image || '',
           price: Number(formData.price) || 0,
-          ordernumber: Number(formData.orderNumber) || 0
+          ordernumber: Number(formData.ordernumber) || 0
         };
       }
       
@@ -199,13 +199,13 @@ const AdminDashboard: React.FC = () => {
       setEditingCategory(category);
       setCategoryFormData({
         name: category.name,
-        orderNumber: category.ordernumber || '',
+        ordernumber: category.ordernumber || '',
       });
     } else {
       setEditingCategory(null);
       setCategoryFormData({
         name: '',
-        orderNumber: '',
+        ordernumber: '',
       });
     }
     setShowCategoryModal(true);
@@ -221,7 +221,7 @@ const AdminDashboard: React.FC = () => {
     try {
       const dataToSend = {
         ...categoryFormData,
-        orderNumber: Number(categoryFormData.orderNumber) || 0
+        ordernumber: Number(categoryFormData.ordernumber) || 0
       };
       
       if (editingCategory) {
@@ -589,13 +589,11 @@ const AdminDashboard: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Tartib raqami <span className="text-red-500">*</span>
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Tartib raqami <span className="text-red-500">*</span></label>
                   <input
                     type="number"
-                    value={formData.orderNumber}
-                    onChange={(e) => setFormData({ ...formData, orderNumber: e.target.value })}
+                    value={formData.ordernumber}
+                    onChange={(e) => setFormData({ ...formData, ordernumber: e.target.value })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                     placeholder="0"
                     required
@@ -706,8 +704,8 @@ const AdminDashboard: React.FC = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-1">Tartib raqami</label>
                   <input
                     type="number"
-                    value={categoryFormData.orderNumber}
-                    onChange={(e) => setCategoryFormData({ ...categoryFormData, orderNumber: e.target.value })}
+                    value={categoryFormData.ordernumber}
+                    onChange={(e) => setCategoryFormData({ ...categoryFormData, ordernumber: e.target.value })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                     placeholder="0"
                     min="0"
