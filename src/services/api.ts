@@ -3,8 +3,8 @@ import axios from 'axios';
 // Use environment variable for API URL
 // Production: https://beyoglu-karshi.uz/api
 // Development: http://localhost:3001/api
-const API_URL = "http://localhost:3001/api"
-// const API_URL = "https://beyoglu-karshi.uz/api/api"
+// const API_URL = "http://localhost:3001/api"
+const API_URL = "https://beyoglu-karshi.uz/api/api"
 // const API_URL = "http://localhost:3001/api"
 
 // Utility function to fix image URLs
