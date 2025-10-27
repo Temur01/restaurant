@@ -236,7 +236,10 @@ const HomePage: React.FC = () => {
         {/* Meals Grouped by Category */}
         {meals && meals.length > 0 ? (
           <div className="space-y-8 sm:space-y-12">
-            {getCategoriesForFilter().slice(1).map((category, categoryIndex) => {
+            {(selectedCategory === 'Barchasi' 
+              ? getCategoriesForFilter().slice(1) 
+              : [selectedCategory]
+            ).map((category, categoryIndex) => {
               const categoryMeals = meals
                 .filter(meal => meal.category === category)
                 .sort((a, b) => (a.ordernumber || 0) - (b.ordernumber || 0));
