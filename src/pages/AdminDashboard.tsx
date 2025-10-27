@@ -127,6 +127,21 @@ const AdminDashboard: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validation
+    if (!formData.name.trim()) {
+      alert('Nom kiritilishi kerak');
+      return;
+    }
+    if (!formData.price || Number(formData.price) === 0) {
+      alert('Narx kiritilishi kerak');
+      return;
+    }
+    if (!formData.category_id) {
+      alert('Kategoriya tanlash kerak');
+      return;
+    }
+    
     try {
       let dataToSend;
       
@@ -135,9 +150,9 @@ const AdminDashboard: React.FC = () => {
         const formDataToSend = new FormData();
         formDataToSend.append('name', formData.name);
         formDataToSend.append('description', formData.description || '');
-        formDataToSend.append('price', (Number(formData.price) || 0).toString());
+        formDataToSend.append('price', Number(formData.price).toString());
         formDataToSend.append('ordernumber', (Number(formData.ordernumber) || 0).toString());
-        formDataToSend.append('category_id', formData.category_id.toString());
+        formDataToSend.append('category_id', Number(formData.category_id).toString());
         formDataToSend.append('ingredients', JSON.stringify(formData.ingredients));
         formDataToSend.append('image', selectedFile);
         
@@ -149,7 +164,8 @@ const AdminDashboard: React.FC = () => {
           description: formData.description || '',
           image: formData.image || '',
           price: Number(formData.price) || 0,
-          ordernumber: Number(formData.ordernumber) || 0
+          ordernumber: Number(formData.ordernumber) || 0,
+          category_id: Number(formData.category_id)
         };
       }
       
