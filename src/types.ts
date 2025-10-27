@@ -1,7 +1,7 @@
 export interface Category {
   id: number;
   name: string;
-  orderNumber?: number;
+  ordernumber?: number;
   created_at?: string;
   updated_at?: string;
 }
@@ -13,7 +13,7 @@ export interface Meal {
   ingredients: string[];
   description: string;
   price: number;
-  orderNumber?: number;
+  ordernumber?: number;
   category: string; // Keep for backward compatibility
   category_id?: number;
   category_info?: Category;

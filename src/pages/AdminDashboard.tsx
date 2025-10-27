@@ -83,7 +83,7 @@ const AdminDashboard: React.FC = () => {
         image: meal.image || '',
         description: meal.description,
         price: meal.price.toString(), // Convert number to string for form
-        orderNumber: meal.orderNumber?.toString() || '',
+        orderNumber: meal.ordernumber?.toString() || '',
         category_id: meal.category_id || '',
         ingredients: meal.ingredients,
       });
@@ -149,7 +149,7 @@ const AdminDashboard: React.FC = () => {
           description: formData.description || '',
           image: formData.image || '',
           price: Number(formData.price) || 0,
-          orderNumber: Number(formData.orderNumber) || 0
+          ordernumber: Number(formData.orderNumber) || 0
         };
       }
       
@@ -199,7 +199,7 @@ const AdminDashboard: React.FC = () => {
       setEditingCategory(category);
       setCategoryFormData({
         name: category.name,
-        orderNumber: category.orderNumber || '',
+        orderNumber: category.ordernumber || '',
       });
     } else {
       setEditingCategory(null);
@@ -448,7 +448,7 @@ const AdminDashboard: React.FC = () => {
                             {category.name}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {category.orderNumber || 0}
+                            {category.ordernumber || 0}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div className="flex space-x-2">
