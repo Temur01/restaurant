@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { authAPI, adminMealsAPI, adminCategoriesAPI } from '../services/api';
+import { authAPI, adminMealsAPI, adminCategoriesAPI, uploadsAPI } from '../services/api';
 import { Meal, Category } from '../types';
 
 const AdminDashboard: React.FC = () => {
@@ -26,7 +26,6 @@ const AdminDashboard: React.FC = () => {
     ordernumber: '' as string | number,
   });
   const [ingredientInput, setIngredientInput] = useState('');
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>('');
   const navigate = useNavigate();
 
@@ -64,7 +63,6 @@ const AdminDashboard: React.FC = () => {
       setCategories(data.categories || []);
     } catch (error) {
       setCategories([]);
-      console.error('Categories fetch error:', error);
     } finally {
       setLoading(false);
     }
@@ -80,7 +78,7 @@ const AdminDashboard: React.FC = () => {
       setEditingMeal(meal);
       setFormData({
         name: meal.name,
-        image: meal.image || '',
+        image: '', // Always start empty - new file uploads only
         description: meal.description,
         price: meal.price.toString(), // Convert number to string for form
         ordernumber: meal.ordernumber?.toString() || '',
@@ -101,7 +99,6 @@ const AdminDashboard: React.FC = () => {
       });
       setImagePreview('');
     }
-    setSelectedFile(null);
     setShowModal(true);
   };
 
@@ -109,19 +106,31 @@ const AdminDashboard: React.FC = () => {
     setShowModal(false);
     setEditingMeal(null);
     setIngredientInput('');
-    setSelectedFile(null);
     setImagePreview('');
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setSelectedFile(file);
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setImagePreview(e.target?.result as string);
-      };
-      reader.readAsDataURL(file);
+      try {
+        // Upload image immediately to /api/uploads
+        const uploadResponse = await uploadsAPI.uploadImage(file);
+        const imageUrl = uploadResponse.url;
+        
+        // Store the image URL in formData
+        setFormData({ ...formData, image: imageUrl });
+        
+        // Show preview
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          setImagePreview(e.target?.result as string);
+        };
+        reader.readAsDataURL(file);
+        
+        // Image successfully uploaded
+      } catch (error: any) {
+        alert('Rasm yuklanishida xatolik: ' + (error.response?.data?.message || error.message));
+      }
     }
   };
 
@@ -143,31 +152,16 @@ const AdminDashboard: React.FC = () => {
     }
     
     try {
-      let dataToSend;
-      
-      if (selectedFile) {
-        // If file is selected, create FormData for file upload
-        const formDataToSend = new FormData();
-        formDataToSend.append('name', formData.name);
-        formDataToSend.append('description', formData.description || '');
-        formDataToSend.append('price', Number(formData.price).toString());
-        formDataToSend.append('ordernumber', (Number(formData.ordernumber) || 0).toString());
-        formDataToSend.append('category_id', Number(formData.category_id).toString());
-        formDataToSend.append('ingredients', JSON.stringify(formData.ingredients));
-        formDataToSend.append('image', selectedFile);
-        
-        dataToSend = formDataToSend;
-      } else {
-        // If no file, send regular JSON data
-        dataToSend = {
-          ...formData,
-          description: formData.description || '',
-          image: formData.image || '',
-          price: Number(formData.price) || 0,
-          ordernumber: Number(formData.ordernumber) || 0,
-          category_id: Number(formData.category_id)
-        };
-      }
+      // Prepare data to send - image is already uploaded and ID is in formData
+      const dataToSend = {
+        name: formData.name,
+        description: formData.description || '',
+        price: Number(formData.price),
+        ordernumber: Number(formData.ordernumber) || 0,
+        category_id: Number(formData.category_id),
+        ingredients: formData.ingredients,
+        image: formData.image || '', // Image ID from upload or empty string
+      };
       
       if (editingMeal) {
         await adminMealsAPI.update(editingMeal.id, dataToSend);
@@ -542,24 +536,7 @@ const AdminDashboard: React.FC = () => {
                         onChange={handleFileChange}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                       />
-                      <p className="text-xs text-gray-500 mt-1">Yoki URL kiritish uchun quyidagi maydonni to'ldiring</p>
-                    </div>
-                    
-                    {/* URL Input */}
-                    <div>
-                      <input
-                        type="text"
-                        value={formData.image}
-                        onChange={(e) => {
-                          setFormData({ ...formData, image: e.target.value });
-                          if (e.target.value) {
-                            setImagePreview(e.target.value);
-                            setSelectedFile(null);
-                          }
-                        }}
-                        placeholder="Rasm URL manzili"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                      />
+                      <p className="text-xs text-gray-500 mt-1">Tasvirni yuklang. Avtomatik ravishda serverga yuboriladi</p>
                     </div>
                     
                     {/* Image Preview */}

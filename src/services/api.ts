@@ -3,7 +3,8 @@ import axios from 'axios';
 // Use environment variable for API URL
 // Production: https://beyoglu-karshi.uz/api
 // Development: http://localhost:3001/api
-const API_URL = "https://beyoglu-karshi.uz/api/api"
+const API_URL = "http://localhost:3001/api"
+// const API_URL = "https://beyoglu-karshi.uz/api/api"
 // const API_URL = "http://localhost:3001/api"
 
 // Utility function to fix image URLs
@@ -86,36 +87,24 @@ export const mealsAPI = {
     };
   },
   create: async (meal: any) => {
-    // Convert category_id to number if it exists
-    const processedMeal = meal instanceof FormData 
-      ? meal 
-      : {
-          ...meal,
-          category_id: meal.category_id ? Number(meal.category_id) : meal.category_id
-        };
+    const processedMeal = {
+      ...meal,
+      category_id: meal.category_id ? Number(meal.category_id) : meal.category_id
+    };
     
-    const config = meal instanceof FormData 
-      ? { headers: { 'Content-Type': 'multipart/form-data' } }
-      : {};
-    const response = await api.post('/meals', processedMeal, config);
+    const response = await api.post('/meals', processedMeal);
     return {
       ...response.data,
       meal: transformMealImageUrl(response.data?.meal),
     };
   },
   update: async (id: number, meal: any) => {
-    // Convert category_id to number if it exists
-    const processedMeal = meal instanceof FormData 
-      ? meal 
-      : {
-          ...meal,
-          category_id: meal.category_id ? Number(meal.category_id) : meal.category_id
-        };
+    const processedMeal = {
+      ...meal,
+      category_id: meal.category_id ? Number(meal.category_id) : meal.category_id
+    };
     
-    const config = meal instanceof FormData 
-      ? { headers: { 'Content-Type': 'multipart/form-data' } }
-      : {};
-    const response = await api.put(`/meals/${id}`, processedMeal, config);
+    const response = await api.put(`/meals/${id}`, processedMeal);
     return {
       ...response.data,
       meal: transformMealImageUrl(response.data?.meal),
@@ -144,36 +133,24 @@ export const adminMealsAPI = {
     };
   },
   create: async (meal: any) => {
-    // Convert category_id to number if it exists
-    const processedMeal = meal instanceof FormData 
-      ? meal 
-      : {
-          ...meal,
-          category_id: meal.category_id ? Number(meal.category_id) : meal.category_id
-        };
+    const processedMeal = {
+      ...meal,
+      category_id: meal.category_id ? Number(meal.category_id) : meal.category_id
+    };
     
-    const config = meal instanceof FormData 
-      ? { headers: { 'Content-Type': 'multipart/form-data' } }
-      : {};
-    const response = await api.post('/admin/meals', processedMeal, config);
+    const response = await api.post('/admin/meals', processedMeal);
     return {
       ...response.data,
       meal: transformMealImageUrl(response.data?.meal),
     };
   },
   update: async (id: number, meal: any) => {
-    // Convert category_id to number if it exists
-    const processedMeal = meal instanceof FormData 
-      ? meal 
-      : {
-          ...meal,
-          category_id: meal.category_id ? Number(meal.category_id) : meal.category_id
-        };
+    const processedMeal = {
+      ...meal,
+      category_id: meal.category_id ? Number(meal.category_id) : meal.category_id
+    };
     
-    const config = meal instanceof FormData 
-      ? { headers: { 'Content-Type': 'multipart/form-data' } }
-      : {};
-    const response = await api.put(`/admin/meals/${id}`, processedMeal, config);
+    const response = await api.put(`/admin/meals/${id}`, processedMeal);
     return {
       ...response.data,
       meal: transformMealImageUrl(response.data?.meal),
@@ -229,6 +206,27 @@ export const adminCategoriesAPI = {
   },
   delete: async (id: number) => {
     const response = await api.delete(`/admin/categories/${id}`);
+    return response.data;
+  },
+};
+
+// Uploads API
+export const uploadsAPI = {
+  uploadImage: async (file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    try {
+      const response = await api.post('/uploads', formData);
+      // Return the upload object with id, filename, url, etc.
+      return response.data.upload;
+    } catch (error) {
+      console.error('Upload failed:', error);
+      throw error;
+    }
+  },
+  getImageById: async (id: string) => {
+    const response = await api.get(`/uploads/${id}`);
     return response.data;
   },
 };
