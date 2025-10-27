@@ -47,6 +47,13 @@ api.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+  
+  // Remove Content-Type header if sending FormData
+  // This allows axios to automatically set the correct multipart/form-data header
+  if (config.data instanceof FormData) {
+    delete config.headers['Content-Type'];
+  }
+  
   return config;
 });
 
