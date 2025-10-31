@@ -14,7 +14,7 @@ import slider3 from '../assets/slider_3.JPG';
 const HomePage: React.FC = () => {
   const [meals, setMeals] = useState<Meal[]>([]);
 
-  const [_, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('Barchasi');
@@ -133,12 +133,14 @@ const HomePage: React.FC = () => {
     ];
   };
 
-  // Get categories for filter
+  // Get categories for filter - use fetched categories from API
   const getCategoriesForFilter = (): string[] => {
-    // Always use meal categories since they're more accurate
-    const mealCategories = meals.map(meal => meal.category);
-    const uniqueCategories = ['Barchasi', ...Array.from(new Set(mealCategories))];
-    return uniqueCategories;
+    // Use the fetched categories from API, sorted by ordernumber
+    const sortedCategories = [...categories].sort((a, b) => 
+      (a.ordernumber || 0) - (b.ordernumber || 0)
+    );
+    const categoryNames = sortedCategories.map(cat => cat.name);
+    return ['Barchasi', ...categoryNames];
   };
 
   if (loading) {
