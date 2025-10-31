@@ -78,7 +78,7 @@ const AdminDashboard: React.FC = () => {
       setEditingMeal(meal);
       setFormData({
         name: meal.name,
-        image: '', // Always start empty - new file uploads only
+        image: meal.image || '', // Preserve existing image URL 
         description: meal.description,
         price: meal.price.toString(), // Convert number to string for form
         ordernumber: meal.ordernumber?.toString() || '',
@@ -134,6 +134,17 @@ const AdminDashboard: React.FC = () => {
     }
   };
 
+  const handleCancelImage = () => {
+    // Remove image - set to empty string
+    setFormData({ ...formData, image: '' });
+    setImagePreview('');
+    // Reset file input
+    const fileInput = document.querySelector('input[type="file"][accept="image/*"]') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = '';
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -152,16 +163,18 @@ const AdminDashboard: React.FC = () => {
     }
     
     try {
-      // Prepare data to send - image is already uploaded and ID is in formData
-      const dataToSend = {
+      // Prepare data to send - image is already uploaded and URL is in formData
+      const dataToSend: any = {
         name: formData.name,
         description: formData.description || '',
         price: Number(formData.price),
         ordernumber: Number(formData.ordernumber) || 0,
         category_id: Number(formData.category_id),
         ingredients: formData.ingredients,
-        image: formData.image || '', // Image ID from upload or empty string
       };
+      
+      // Always send image value (including empty string if removed)
+      dataToSend.image = formData.image || '';
       
       if (editingMeal) {
         await adminMealsAPI.update(editingMeal.id, dataToSend);
@@ -542,11 +555,24 @@ const AdminDashboard: React.FC = () => {
                     {/* Image Preview */}
                     {imagePreview && (
                       <div className="mt-3">
-                        <img
-                          src={imagePreview}
-                          alt="Preview"
-                          className="w-32 h-32 object-cover rounded-lg border border-gray-300"
-                        />
+                        <div className="relative inline-block">
+                          <img
+                            src={imagePreview}
+                            alt="Preview"
+                            className="w-32 h-32 object-cover rounded-lg border border-gray-300"
+                          />
+                          <button
+                            type="button"
+                            onClick={handleCancelImage}
+                            className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-7 h-7 flex items-center justify-center hover:bg-red-600 text-lg font-bold shadow-md"
+                            title="Rasmni olib tashlash"
+                          >
+                            ×
+                          </button>
+                        </div>
+                        <p className="text-xs text-gray-500 mt-2">
+                          Rasmini olib tashlash uchun × tugmasini bosing
+                        </p>
                       </div>
                     )}
                   </div>
