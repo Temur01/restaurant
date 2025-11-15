@@ -20,7 +20,7 @@ const MealCard: React.FC<MealCardProps> = ({ meal }) => {
       >
         {/* Image */}
         {meal.image && (
-          <div className="relative w-full h-[160px] overflow-hidden">
+          <div className="relative w-full overflow-hidden">
             <img
               src={meal.image}
               alt={meal.name}
