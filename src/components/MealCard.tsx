@@ -72,9 +72,6 @@ const MealCard: React.FC<MealCardProps> = ({ meal }) => {
                   className="relative mb-6 rounded-xl overflow-hidden min-h-[288px]"
                   style={{
                     backgroundImage: `url(${meal.image})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    backgroundRepeat: 'no-repeat'
                   }}
                 >
                   <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg">
