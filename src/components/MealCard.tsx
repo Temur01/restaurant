@@ -13,46 +13,49 @@ const MealCard: React.FC<MealCardProps> = ({ meal }) => {
 
   return (
     <>
-      {/* Simplified Card View */}
-      <div 
+      {/* Card */}
+      <div
         className="group bg-white rounded-3xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1 hover:scale-105"
         onClick={openModal}
       >
-        {/* Image Section - Only show if image exists */}
+        {/* Image */}
         {meal.image && (
-          <div 
-            className="relative overflow-hidden min-h-[160px]"
-            style={{
-              backgroundImage: `url(${meal.image})`,
-              }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
-            
+          <div className="relative w-full h-[160px] overflow-hidden">
+            <img
+              src={meal.image}
+              alt={meal.name}
+              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+            />
+
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
           </div>
         )}
 
-        {/* Name Section */}
+        {/* Name */}
         <div className="p-3 sm:p-6 text-center">
-          <h3 className="text-base sm:text-xl font-bold text-gray-800 group-hover:text-orange-600 transition-colors leading-tight">
+          <h3 className="text-base sm:text-xl font-bold text-gray-800 group-hover:text-orange-600 transition-colors">
             {meal.name}
           </h3>
           <div className="text-gray-500 text-xs sm:text-sm mt-1 mb-2">{meal.category}</div>
-          <div className="text-orange-500 font-bold text-sm sm:text-base">{meal.price.toLocaleString()} so'm</div>
+          <div className="text-orange-500 font-bold text-sm sm:text-base">
+            {meal.price.toLocaleString()} so'm
+          </div>
         </div>
       </div>
 
-      {/* Enhanced Modal for Full Details */}
+      {/* Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in">
-          <div className="bg-white rounded-2xl max-w-3xl w-full max-h-[95vh] overflow-y-auto shadow-2xl animate-scale-in">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl max-w-3xl w-full max-h-[95vh] overflow-y-auto shadow-2xl">
+            
             {/* Modal Header */}
-            <div className="relative bg-gradient-to-r from-orange-500 to-red-500 p-6 text-white">
-              <div className="absolute inset-0 bg-black/10 rounded-t-2xl"></div>
+            <div className="relative bg-gradient-to-r from-orange-500 to-red-500 p-6 text-white rounded-t-2xl">
               <div className="relative flex justify-between items-center">
                 <div>
-                  <h2 className="text-2xl sm:text-3xl font-bold mb-1">{meal.name}</h2>
+                  <h2 className="text-2xl sm:text-3xl font-bold">{meal.name}</h2>
                   <p className="text-orange-100">{meal.category}</p>
                 </div>
+
                 <button
                   onClick={closeModal}
                   className="bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full p-2 transition-colors"
@@ -66,14 +69,16 @@ const MealCard: React.FC<MealCardProps> = ({ meal }) => {
 
             {/* Modal Content */}
             <div className="p-6">
-              {/* Image - Only show if image exists */}
+              
+              {/* Image */}
               {meal.image && (
-                <div 
-                  className="relative mb-6 rounded-xl overflow-hidden min-h-[288px]"
-                  style={{
-                    backgroundImage: `url(${meal.image})`,
-                  }}
-                >
+                <div className="relative mb-6 rounded-xl overflow-hidden">
+                  <img
+                    src={meal.image}
+                    alt={meal.name}
+                    className="w-full h-[280px] sm:h-[350px] object-cover"
+                  />
+
                   <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg">
                     <span className="text-orange-600 font-bold text-lg">
                       {meal.price === 0 ? 'Bepul' : `${meal.price.toLocaleString()} so'm`}
@@ -81,8 +86,8 @@ const MealCard: React.FC<MealCardProps> = ({ meal }) => {
                   </div>
                 </div>
               )}
-              
-              {/* Price display when no image */}
+
+              {/* Price when no image */}
               {!meal.image && (
                 <div className="mb-6 text-center">
                   <div className="inline-block bg-gradient-to-r from-orange-500 to-red-500 text-white px-6 py-3 rounded-full shadow-lg">
@@ -96,9 +101,6 @@ const MealCard: React.FC<MealCardProps> = ({ meal }) => {
               {/* Description */}
               <div className="mb-6">
                 <h3 className="text-xl font-bold text-gray-800 mb-3 flex items-center gap-2">
-                  <svg className="w-5 h-5 text-orange-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                  </svg>
                   Tavsif
                 </h3>
                 <p className="text-gray-600 leading-relaxed text-lg">
@@ -109,9 +111,6 @@ const MealCard: React.FC<MealCardProps> = ({ meal }) => {
               {/* Ingredients */}
               <div>
                 <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-                  <svg className="w-5 h-5 text-orange-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm0 4a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1V8zm8 0a1 1 0 011-1h4a1 1 0 011 1v2a1 1 0 01-1 1h-4a1 1 0 01-1-1V8zm0 4a1 1 0 011-1h4a1 1 0 011 1v2a1 1 0 01-1 1h-4a1 1 0 01-1-1v-2z" clipRule="evenodd" />
-                  </svg>
                   Tarkibi
                 </h3>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -137,11 +136,12 @@ const MealCard: React.FC<MealCardProps> = ({ meal }) => {
                 >
                   Yopish
                 </button>
-                <button className="flex-1 bg-gradient-to-r from-orange-500 to-red-500 text-white py-3 rounded-xl font-semibold hover:from-orange-600 hover:to-red-600 transition-all shadow-lg hover:shadow-xl">
+                <button className="flex-1 bg-gradient-to-r from-orange-500 to-red-500 text-white py-3 rounded-xl font-semibold hover:from-orange-600 hover:to-red-600 transition-all shadow-lg">
                   Buyurtma berish
                 </button>
               </div>
             </div>
+
           </div>
         </div>
       )}
@@ -150,4 +150,3 @@ const MealCard: React.FC<MealCardProps> = ({ meal }) => {
 };
 
 export default MealCard;
-
