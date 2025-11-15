@@ -21,7 +21,7 @@ const MealCard: React.FC<MealCardProps> = ({ meal }) => {
         {/* Image Section - Only show if image exists */}
         {meal.image && (
           <div 
-            className="relative h-40 sm:h-48 lg:h-56 overflow-hidden min-h-[160px]"
+            className="relative overflow-hidden min-h-[160px]"
             style={{
               backgroundImage: `url(${meal.image})`,
               backgroundSize: 'cover',
