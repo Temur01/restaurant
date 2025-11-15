@@ -24,10 +24,7 @@ const MealCard: React.FC<MealCardProps> = ({ meal }) => {
             className="relative overflow-hidden min-h-[160px]"
             style={{
               backgroundImage: `url(${meal.image})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              backgroundRepeat: 'no-repeat'
-            }}
+              }}
           >
             <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
             
