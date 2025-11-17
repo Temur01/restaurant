@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authAPI, adminMealsAPI, adminCategoriesAPI, uploadsAPI } from '../services/api';
 import { Meal, Category } from '../types';
+import MealCard from '../components/MealCard';
 
 const AdminDashboard: React.FC = () => {
   const [meals, setMeals] = useState<Meal[]>([]);
@@ -9,6 +10,7 @@ const AdminDashboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
+  const [showGridView, setShowGridView] = useState(false);
   const [editingMeal, setEditingMeal] = useState<Meal | null>(null);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [activeTab, setActiveTab] = useState<'meals' | 'categories'>('meals');
@@ -268,6 +270,12 @@ const AdminDashboard: React.FC = () => {
         alert('Xatolik yuz berdi. Kategoriyada taomlar mavjud bo\'lishi mumkin.');
       }
     }
+  };
+
+  // Helper to get category names in order (used for grouping grid view)
+  const getCategoriesForFilter = (): string[] => {
+    const sortedCategories = [...categories].sort((a, b) => (a.ordernumber || 0) - (b.ordernumber || 0));
+    return sortedCategories.map(cat => cat.name);
   };
 
   if (loading) {
