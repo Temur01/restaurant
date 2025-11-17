@@ -8,8 +8,10 @@ import { mealsAPI, categoriesAPI } from '../services/api';
 
 // Import slider images
 import slider1 from '../assets/slider_1.JPG';
-// import slider2 from '../assets/slider_2.JPG';
-import slider3 from '../assets/slider_3.JPG';
+// slider_2.JPG and slider_3.JPG removed from project — using placeholders
+// Example placeholders added for development/testing
+  import placeholder1 from '../assets/placeholder1.svg';
+import placeholder2 from '../assets/placeholder2.svg';
 
 const HomePage: React.FC = () => {
   const [meals, setMeals] = useState<Meal[]>([]);
@@ -22,8 +24,8 @@ const HomePage: React.FC = () => {
   // Slider images
   const sliderImages = [
     slider1,
-    // slider2,
-    slider3
+    placeholder1,
+    placeholder2
   ];
 
   useEffect(() => {

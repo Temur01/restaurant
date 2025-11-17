@@ -1,4 +1,5 @@
 import React from 'react';
+import logo from '../assets/logo.JPG';
 
 const Header: React.FC = () => {
   return (
@@ -31,11 +32,11 @@ const Header: React.FC = () => {
       {/* Main Header */}
       <div className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
         <div className="flex flex-col items-center justify-center">
-          {/* <img 
-            src="/src/assets/logo.JPG" 
+          <img 
+            src={logo} 
             alt="Beyougli Karshi Logo" 
             className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover shadow-lg mb-3"
-          /> */}
+          />
           <div className='text-center'>
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">Beyoglu Karshi</h1>
             <p className="text-orange-100 text-xs sm:text-sm mt-0.5">Turkiya taomlari | Fast Food | Nonushta</p>
