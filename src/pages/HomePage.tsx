@@ -7,11 +7,19 @@ import { Meal, Category } from '../types';
 import { mealsAPI, categoriesAPI } from '../services/api';
 
 // Import slider images
-import slider1 from '../assets/slider_1.JPG';
-// slider_2.JPG and slider_3.JPG removed from project — using placeholders
-// Example placeholders added for development/testing
-  import placeholder1 from '../assets/placeholder1.svg';
-import placeholder2 from '../assets/placeholder2.svg';
+import slider1 from '../assets/slider1.JPG';
+import slider2 from   '../assets/slider2.JPG';
+import slider3 from   '../assets/slider3.JPG';
+import slider4 from   '../assets/slider4.JPG';
+import slider5 from   '../assets/slider5.JPG';
+import slider6 from   '../assets/slider6.JPG';
+import slider7 from   '../assets/slider7.JPG';
+import slider8 from   '../assets/slider8.JPG';
+import slider9 from   '../assets/slider9.JPG';
+import slider10 from  '../assets/slider10.JPG';
+import slider11 from '../assets/slider11.JPG';
+import slider12 from '../assets/slider12.JPG';
+import slider13 from "../assets/slider13.JPG"
 
 const HomePage: React.FC = () => {
   const [meals, setMeals] = useState<Meal[]>([]);
@@ -23,9 +31,19 @@ const HomePage: React.FC = () => {
 
   // Slider images
   const sliderImages = [
-    slider1,
-    placeholder1,
-    placeholder2
+     slider7,
+    slider6,
+    slider5,
+    slider13,
+    slider12,
+    slider11,
+    slider10,
+    slider9,
+    slider8,
+    slider4,
+    slider3,
+    slider2,
+    slider1
   ];
 
   useEffect(() => {
