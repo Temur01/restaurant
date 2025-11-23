@@ -1,0 +1,13 @@
+# Repozitoriyani o‘z kompyuteringizga yuklang (agar hali yuklanmagan bo‘lsa)
+git clone https://github.com/Temur01/restaurant.git
+cd restaurant
+
+# Faylni o‘chirib yuboring
+rm src/assets/slider10.JPG
+
+# O‘chirilganini belgilab, commit qiling
+git add .
+git commit -m "slider10.JPG faylini o‘chirildi"
+
+# GitHub-ga yuboring (push)
+git push origin main
